@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hair Finder App</title>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Game explorer, expand your library" />
+    	<meta name="author" content="Ben Miller, Fabian Rastorfer" />
+		<link rel="stylesheet" type="text/css" href="styles/style.css">
+	</head>
+	<body>
+		<main id="hf_appHook">
+			<div id="imageFace"></div>
+			<img id="imageHair" src="" crossorigin="Anonymous" />
+			<canvas id="displayPane" width="484" height="613" data-caman-hidpi-disabled ></canvas>
+			<img id="imageLoad" src="images/loading.gif">
+			<p id="imageID">00001</p>
+			<div id="leftPaneWrapper">
+				<div id="leftPane"></div>
+				<div id="leftPaneBorder"></div>
+			</div>
+			<a href="http://www.hairfinder.com" id="logoLink">Powered by<br/><span>hairfinder.com</span></a>
+			<div id="topPane"></div>
+			<div id="bottomPane"></div>
+		</main>
+
+		<div id="scriptTags">
+			<!-- HAIRSTYLE VIEWS -->
+			<script id="hf_hairstyleElement" type="text/template">
+				<div class="hairstyleElementFilter"><p>More about this hairstyle.</p></div>
+				<img class="hairstyleElement" data-id="<%=hf_id%>" src="<%=hf_imageThumbnail%>" />
+			</script>
+
+			<!-- MODEL FACE VIEWS -->
+			<script id="hf_faceElement" type="text/template">
+				<div class="faceElementFilter"></div>
+				<img class="faceElement" data-id="<%=hf_id%>" src="<%=hf_image_thumb%>" />
+			</script>
+
+			<!-- TOP MENU VIEWS -->
+			<script id="hf_topMenuElement" type="text/template">
+				<div class="topMenu" id="<%=hf_buttonID%>"></div>
+			</script>
+			<script id="hf_topMenuItemElement" type="text/template">
+				<div class="topMenuItem" id="<%=hf_buttonID%>">
+					<%=hf_buttonName%>
+				</div>
+				<ul class="topMenuSub" id="<%=hf_buttonID%>Sub"></ul>
+			</script>
+
+			<!-- BOTTOM MENU VIEWS -->
+			<script id="hf_bottomMenuElement" type="text/template">
+				<div class="bottomMenu" id="<%=hf_buttonID%>"></div>
+			</script>
+
+			<script id="hf_bottomMenuItemElement" type="text/template">
+				<div class="bottomMenuItem" id="<%=hf_buttonID%>">
+					<%=hf_buttonName%>
+				</div>
+				<div class="bottomMenuSubWrapper">
+					<ul class="bottomMenuSub" id="<%=hf_buttonID%>Sub"></ul>
+				</div>
+			</script>
+
+			<!-- COLOR VIEWS -->
+			<script id="hf_colorHairElement" type="text/template">
+				<div class="colorHair" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
+			</script>
+			<script id="hf_colorHighlightElement" type="text/template">
+				<div class="colorHair"></div>
+				<div class="colorHighlight" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
+			</script>
+		</div>
+
+		<script src="js/libs/jquery.js"></script>
+		<script src="js/libs/underscore.js"></script>
+		<script src="js/libs/backbone.js"></script>
+		<script src="js/models/model_color.js"></script>
+		<script src="js/models/model_face.js"></script>
+		<script src="js/models/model_hairstyle.js"></script>
+		<script src="js/models/model_topMenuItem.js"></script>
+		<script src="js/models/model_bottomMenuItem.js"></script>
+		<script src="js/collections/collection_colors.js"></script>
+		<script src="js/collections/collection_faces.js"></script>
+		<script src="js/collections/collection_hairstyles.js"></script>
+		<script src="js/collections/collection_topMenu.js"></script>
+		<script src="js/collections/collection_bottomMenu.js"></script>
+		<script src="js/views/view_model_color.js"></script>
+		<script src="js/views/view_model_face.js"></script>
+		<script src="js/views/view_model_hairstyle.js"></script>
+		<script src="js/views/view_model_topMenuItem.js"></script>
+		<script src="js/views/view_model_bottomMenuItem.js"></script>
+		<script src="js/views/view_collection_colors.js"></script>
+		<script src="js/views/view_collection_faces.js"></script>
+		<script src="js/views/view_collection_hairstyles.js"></script>
+		<script src="js/views/view_collection_topMenu.js"></script>
+		<script src="js/views/view_collection_bottomMenu.js"></script>
+		<!--<script src="js/routes/router.js"></script>-->
+		<script src="js/hairFinderApp.js"></script>
+	</body>
+</html>

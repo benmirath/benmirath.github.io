@@ -1,0 +1,114 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+#hf_appHook {
+	position: relative;
+	width: 700px;
+	height: 700px;
+	background-color: #e2ccd5;
+}
+
+#displayPane {
+	position: relative;
+	/*width: 492px;*/
+	width: 484px;
+	height: 564px;
+	left: 208px;
+	top: 44px;
+	border-right: solid 8px #5e7eb5;
+}
+
+#displayPane #imageHair {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 468px;
+	height: 564px;
+}
+
+
+#leftPane {
+	position: absolute;
+	/*width: 208px;*/
+	/*height: 700px;*/
+	width: 200px;
+	height: 660px;
+	left: 0px;
+	padding-top: 40px;
+	padding-left: 8px;
+	border-right: solid 5px #49628c;
+	background-color: #5e7eb5;
+	overflow: scroll;
+}
+
+#leftPane::-webkit-scrollbar { 
+    display: none; 
+}
+
+#topPane {
+	position: absolute;
+	width: 487px;
+	height: 44px;
+	left: 213px;
+	background-color: #73163b;
+}
+
+#topPaneSub {
+	display: none;
+	position: absolute;
+	width: 487px;
+	height: 30px;
+	top: 44px;
+	left: 213px;
+	background-color: #73163b;
+}
+#topPaneSub.subActive {
+	display: block;
+}
+
+#bottomPane {
+	position: absolute;
+	width: 700px;
+	height: 43px;
+	background-color: #73163b;
+	bottom: 0px;
+	left: 0px;
+}
+
+#bottomPane.subActive {
+	bottom: 60px;
+}
+
+#bottomPaneSub {
+	display: block;
+	bottom: 0;
+	position: absolute;
+	width: 700px;
+	height: 60px;
+	background-color: #a92057;
+}
+
+#bottomPaneSub.hidden {
+	display: none;
+}
+
+.hairstyleElement {
+	display: inline-block;
+	/*cursor: pointer;*/
+}
+/*.hairstyleElement img {*/
+div {
+	display: inline-block;
+}
+.hairstyleElement  {
+	cursor: pointer;
+	display: inline-block;
+	width: 87px;
+	height: 87px;
+	margin: 3px 3px;
+	border: solid 1px #6f6e8f;
+	border-radius: 5px;
+}
+

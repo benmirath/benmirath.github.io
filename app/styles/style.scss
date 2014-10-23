@@ -1,0 +1,442 @@
+$fontFamily: 'Bellerose', helvetica;
+$PrimaryColorDark: #73163b;
+$thumbnailSize: 87px;
+
+@font-face {
+    font-family: Bellerose;
+    src: url(../fonts/Bellerose.ttf);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: $fontFamily;
+}
+
+div {
+	display: inline-block;
+}
+
+#hf_appHook {
+	position: relative;
+	width: 700px;
+	height: 700px;
+	background-color: #e2ccd5;
+}
+
+#displayPane {
+	position: absolute;
+	// width: 484px;
+	// height: 613px;
+	left: 208px;
+	top: 44px;
+	border-right: solid 8px #49628c;
+
+	
+	#imageHair {
+		// filter: hue-rotate(10deg);
+		// -webkit-filter: hue-rotate(10deg);
+		
+	}
+}
+
+.displayImage {
+	position: absolute;
+	top: 45px;
+	left: 210px;
+	width: 484px;
+	height: 613px;
+}
+#imageFace {
+	@extend .displayImage;
+	background-size: 100%;
+	background-origin: center;
+	background-repeat: no-repeat;
+}
+#imageHair {
+	@extend .displayImage;
+	background-color-blend: multiply;
+	-webkit-background-color-blend: multiply;
+	display: none;
+}
+#imageID {
+	position: absolute;
+	right: 15px;
+	bottom: 50px;
+	font-size: 10px;
+	color: #766860;
+	letter-spacing: 1px;
+}
+#imageLoad {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	top: 250px;
+	left: 350px;
+	opacity: .6;
+}
+
+#logoLink {
+	position: absolute;
+	width: 250px;
+	top: 15px;
+	left: -80px;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	text-decoration: none;
+	background-color: #bc4c82;
+	text-align: center;
+	color: black;
+	font-size: 18px;
+	line-height: 18px;
+	-ms-transform: rotate(-45deg); /* IE 9 */
+	-webkit-transform: rotate(-45deg); /* Chrome, Safari, Opera */
+	transform: rotate(-45deg);
+}
+#logoLink span {
+	color: white;
+	font-size: 24px;
+}
+#leftPaneWrapper {
+	position: absolute;
+	left:0;
+	top:0;
+	height: 100%;
+    width: 213px;
+    overflow: hidden;
+    .hf_collection_hairstyle, .hf_collection_face {
+    	width: 200px;
+    	padding-bottom: 40px;
+    }
+    #leftPaneBorder {
+    	position: absolute;
+		left: 208px;
+		width: 5px;
+		height: 660px;
+		background-color: #49628c;
+    }
+	#leftPane {
+		position: absolute;
+		width: 200px;
+		height: 660px;
+		left: 0px;
+		padding-top: 40px;
+		padding-left: 8px;
+		padding-right: 15px;
+		background-color: #5e7eb5;
+		overflow-y: auto;
+
+		.leftPaneElement {
+			cursor: pointer;
+			display: inline-block;
+			width: 87px;
+			height: 87px;
+			margin: 3px 3px;
+			border: solid 1px #6f6e8f;
+			border-radius: 5px;
+		}
+		.leftPaneElement:hover {
+			border-color: white;
+		}
+
+		.hairstyleElement, .faceElement {
+			@extend .leftPaneElement;
+		}
+		.hairstyleElement:hover, .faceElement:hover {
+			@extend .leftPaneElement:hover;
+		}
+
+		.hairstyleElementFilter, .faceElementFilter {
+			@extend .leftPaneElement;
+			position: absolute;
+			opacity: 0;
+			transition: background-color .25s, opacity .25s;
+			-webkit-transition: background-color .25s, opacity .25s;
+		}
+		.hairstyleElementFilter p {
+			display: inline-block;
+			position: relative;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			-ms-transform: translateY(-50%);
+			transform: translateY(-50%);
+
+			text-align: center;
+			margin-top: -6px;
+			line-height: 20px;
+			font-size: 20px;
+			opacity: 0;
+			transition: opacity .5s;
+			-webkit-transition: opacity .5s;
+		}
+
+		.hairstyleElementFilter.active p {
+			opacity: 1;
+		}
+
+		.hairstyleElementFilter:hover, .hairstyleElementFilter.active, 
+		.faceElementFilter:hover, .faceElementFilter.active {
+			background-color: rgba(255,255,255,0.4);
+			opacity: 1;
+		}
+	}
+}
+
+#leftPane::-webkit-scrollbar { 
+    display: none; 
+}
+
+
+
+.menuItemElement {
+	font-size: 26px;
+	text-align: center;
+	line-height: 30px;
+	color: white;
+	background-color: #a92057;
+	transition: background-color .25s;
+	-webkit-transition: background-color .25s;
+	cursor: pointer;
+}
+.menuItemElement:hover {
+	background-color: #5d112e;
+	color: white;
+}
+.menuSubItemElement {
+	overflow: hidden;
+	position: absolute;
+	max-height: 0px;
+	transition: max-height .5s;
+	-webkit-transition: max-height .5s;
+	background-color: $PrimaryColorDark;
+	pointer-events: none;
+}
+
+// TOP MENU COMPONENTS
+#topPane {
+	position: absolute;
+	width: 487px;
+	height: 44px;
+	left: 213px;
+	background-color: $PrimaryColorDark;
+}
+#topPaneSub {
+	position: absolute;
+	top: 44px;
+	left: 213px;
+}
+.topMenu {
+	@extend #topPane;
+	left: 0px;
+	width: 483px;
+	height: 40px;
+	padding: 2px 0px 2px 4px;
+	list-style: none;
+
+	li {
+		display: inline-block;
+	}
+
+	.hf_topMenuItem {
+		@extend .menuItemElement;
+		width: 118px;
+		height: 40px;
+		margin: 0 1px;
+	}
+	.topMenuItem {
+		pointer-events: none;
+	}
+	.hf_topMenuItem.subActive {
+		border-bottom: solid 2px #fff;
+	}
+	.hf_topMenuItem:hover, .hf_topMenuItem.active, .hf_topMenuSubItem.active, .hf_topMenuSubItem:hover {
+		@extend .menuItemElement:hover;
+	}
+	.hf_topMenuSubItem.active {
+		border-bottom: solid 2px #fff;
+	}
+
+	.topMenuSub {
+		@extend .menuSubItemElement;
+		width: 487px;
+		height: 32px;
+		left: 0;
+		top: 43px;
+
+		li {
+			display: inline-block;
+			float: left;
+			list-style: none;
+			height: 27px;
+			margin-top: 2px;
+			margin-left: 5px;
+			cursor: pointer;
+			pointer-events: auto;
+			color: black;
+
+			text-align: center;
+			font-size: 24px;
+			line-height: 17px;
+			background-color: #871945;
+
+			transition: background-color .25s, color .25s;
+			-webkit-transition: background-color .25s, color .25s;
+		}
+		li:last-child {
+			float: right;
+			margin-left: 0px;
+			margin-right: 5px;
+		}
+
+		&#topMenuModelSub, &#topMenuStyleSub {
+			li {
+				width: 156px;
+			}
+		}
+		&#topMenuLengthSub{
+			li {
+				width: 91.5px;
+			}
+		}
+		&#topMenuTextureSub{
+			li {
+				width: 116px;
+			}
+		}
+		&.active {
+			max-height: 32px;
+		}
+	}
+}
+
+// BOTTOM MENU COMPONENTS
+#bottomPane {
+	position: absolute;
+	width: 700px;
+	background-color: #73163b;
+	bottom: 0px;
+	left: 0px;
+}
+
+.bottomMenu {
+	@extend #bottomPane;
+	height: 43px;
+	transition: bottom .5s;
+	
+	&.bottomMenuColorActive {
+		bottom: 121px;
+		.hf_bottomMenuItem {
+
+		}
+	}
+
+
+	.hf_bottomMenuItem {
+		@extend .menuItemElement;
+		display: inline-block;
+		float: left;
+		width: 169px;
+		height: 38px;
+		margin: 2px 3px;
+
+
+		.bottomMenuItem {
+			pointer-events: none;
+			z-index: 2;
+		}
+		.bottomMenuSub {
+			@extend .menuSubItemElement;
+			
+			li {
+				list-style: none;
+			}
+			
+		}		
+		#bottomMenuColorSub {
+			left: 0;
+			bottom: 0;
+			width: 700px;
+			height: 120px;
+
+			top: 43px;
+			z-index: 1;
+			ul {
+				display: block;
+				height: 52px;
+				margin-top: 3px;
+				overflow-x: auto;
+				overflow-y: hidden;
+				pointer-events: auto;
+				cursor: auto;
+
+				li {
+					width: 50px;
+					height: 50px;
+					display: inline-block;
+					float: left;
+					margin: 2px 10px;
+					border-radius: 50px;
+					cursor: pointer;
+
+					.hairIcon {
+						position: absolute;
+						width: 48px;
+						height: 48px;
+						border-radius: 50px;
+						border: 2px solid #8e1c49;
+						&.active {
+							border-color: white;
+						}
+					}
+					.colorHair {
+						@extend .hairIcon;
+						
+						background-image: url('../images/haircolor_icon.png');
+						background-repeat: no-repeat;
+						background-blend-mode: multiply;
+					}
+					.colorHighlight {
+						@extend .hairIcon;
+						background-image: url('../images/hairstreak_icon.png');
+					}
+				}
+			}
+
+			
+		}
+		&.active {
+			#bottomMenuColorSub {
+				max-height: 120px;
+			}
+
+			
+
+			// COLOR MENU
+		}
+	}
+	.hf_bottomMenuItem:hover, .hf_bottomMenuItem.active {
+		@extend .menuItemElement:hover;
+	}
+	.hf_bottomMenuItem:last-child {
+		float: right;
+	}
+	
+
+}
+
+#bottomPane.subActive {
+	bottom: 60px;
+}
+
+#bottomPaneSub {
+	display: block;
+	bottom: 0;
+	position: absolute;
+	width: 700px;
+	height: 60px;
+	background-color: #a92057;
+}
+
+#bottomPaneSub.hidden {
+	display: none;
+}
