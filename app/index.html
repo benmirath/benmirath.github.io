@@ -26,7 +26,7 @@
 		<div id="scriptTags">
 			<!-- HAIRSTYLE VIEWS -->
 			<script id="hf_hairstyleElement" type="text/template">
-				<div class="hairstyleElementFilter"><p>More about this hairstyle.</p></div>
+				<div class="hairstyleElementFilter" id="haircut_num_<%=hf_id%>"><p>More about this hairstyle.</p></div>
 				<img class="hairstyleElement" data-id="<%=hf_id%>" src="<%=hf_imageThumbnail%>" />
 			</script>
 
@@ -69,6 +69,56 @@
 				<div class="colorHair"></div>
 				<div class="colorHighlight" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
 			</script>
+
+			<!--<script id="hf_accountMenuElement" type="text/template">
+				<form class="accountMenu accountSignedOut">
+					Please enter your account info<br/>
+					Email:<br/>
+					<input id="hf_signedOutEmail" type="text"><br/>
+					Password:<br/>
+					<input id="hf_signedOutPassword" type="text"><br/>
+					<input id="hf_signedOutRememberMe" name="rememberMe" type="checkbox"><br/>
+
+					<input id="hf_signedOutSignIn" name="signIn" type="submit"><br/>
+					<input id="hf_signedOutForgotPassword" name="forgotPassword" type="submit"><br/>
+					<input id="hf_signedOutRegister" name="register" type="submit">
+				</form>
+				<form class="accountMenu accountSignedIn">
+					Update your account settings<br/>
+					Password:<br/>
+					<input id="hf_signedInPassword" type="text"><br/>
+					<input id="hf_signedInPasswordConfirm" type="text"><br/>
+					<select id="hf_signedInGender">
+						<option id="hf_signedInGender_Female">Female</option>
+						<option id="hf_signedInGender_Male">Male</option>
+					</select><br/>
+					<input id="hf_signedInUpdate" type="submit"><br/>
+					<input id="hf_signedInSignOut" type="submit"><br/>
+					<input id="hf_signedInDelete" type="submit">
+				</form>
+				<form class="accountMenu accountRegister">
+					Please fill out the form below to register your account:<br/>
+					<input id="hf_registerEmail" type="text"><br/>
+					<input id="hf_registerPassword" type="text"><br/>
+					<input id="hf_registerPasswordConfirm" type="text"><br/>
+					<input id="hf_registerGender">
+						<option id="hf_registerGender_Female">Female</option>
+						<option id="hf_registerGender_Male">Male</option>
+					</select><br/>
+					<input id="hf_registerSubmit" type="submit">
+				</form>
+				<form class="accountMenu accountDelete">
+					Are you sure you want to delete your account?<br/>
+					<input id="hf_deleteYes" type="submit"><br/>
+					<input id="hf_deleteNo" type="submit">
+				</form>
+				<form class="accountMenu accountForgot">
+					Enter the email connected to your account below, and we'll email you your password<br/>
+					<input id="hf_forgotEmail" type="text"><br/>
+					<input id="hf_forgotConfrom" type="text">
+				</form>
+			</script>-->
+			<script id="hf_share" type="text/template"></script>
 		</div>
 
 		<script src="js/libs/jquery.js"></script>

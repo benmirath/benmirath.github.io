@@ -17,6 +17,8 @@ app.hf_view_model_bottomMenuItem = Backbone.View.extend({
 	},
 	toggleMenu : function (e) {
 		// targetting base bottom menu item
+		targetObj = e.target;
+		console.log(targetObj);
 		if (targetObj.classList.contains('hf_bottomMenuItem') || targetObj.classList.contains('bottomMenuItem')) { 
 			// If active, disable button 
 			if (targetObj.classList.contains('active')) {
