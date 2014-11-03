@@ -20,6 +20,7 @@ app.hf_view_model_color = Backbone.View.extend({
 	},
 	setDisplayType : function(type) {
 		this.displayType = type;
+		this.model.attributes.hf_display_type = type;
 	},
 	events : {
 		'click' : 'loadColor'
@@ -29,30 +30,38 @@ app.hf_view_model_color = Backbone.View.extend({
 		colorObjTest = e;
 		var tar = e;
 		//hair color is active, return to default;
+		
+
 		if ($(tar.target).hasClass('active')) {
 			$(tar.target).removeClass('active');
-			curColor = '';
-			colorize = false;
-			imageHair.src = curHaircut.attributes.hf_imageOriginal;
-
+			if (this.displayType === "Hair") {
+				curColor = '';
+				imageHair.src = curHaircut.attributes.hf_imageOriginal;
+			} else if (this.displayType === "Highlight") {
+				imageHairHighlight.src = imageBlank;
+				curColorHighlight = '';
+			}
 		} else {
-			$('.colorHair.active').each(function(){
-				$(this).removeClass('active')
-			});
-			// $(tar.target).children('.hairColor').addClass('active');
-			$(tar.target).addClass('active');
-			curColor = $(tar.target).data('color_val');
-			colorize = true;
-			// imageHair.src = '';
-			imageHair.src = curHaircut.attributes.hf_imageGrayscale;
-			colorizeHair();
-		}
+			if (imageHair.src != curHaircut.attributes.hf_imageGrayscale && this.displayType === "Hair") {
+				$(display).css('opacity', 0);
+			}
+			if (imageHairHighlight.src != curHaircut.attributes.hf_imageHighlight && this.displayType === "Highlight") {
+				$(displayHighlight).css('opacity', 0);
+			}
 
-		// Caman(hairstyleCollection.models[0].attributes.hf_imageOriginal,'#displayPane', function () {
-		// 	this.render();
-		// });
-		// $('#displayPane img#imageHair').attr('src', curHaircut.model.attributes.hf_imageGrayscale).css('background-color', '').css('background-blend-mode', '');
-		// $('#displayPane img#imageHair');
+			if (this.displayType === "Hair") {
+				$('.colorHair.active').each( function() { $(this).removeClass('active') } );
+				curColor = $(tar.target).data('color_val');
+				imageHair.src = curHaircut.attributes.hf_imageGrayscale;
+			} else if (this.displayType === "Highlight") {
+				$('.Highlight.active').each( function() { $(this).removeClass('active') } );
+				curColorHighlight = $(tar.target).data('color_val');
+				imageHairHighlight.src = curHaircut.attributes.hf_imageHighlight;
+			}
+			$(tar.target).addClass('active');			
+		}
+		console.log($(tar.target).data('color_val'));
+		colorizeHair();
 	}
 });
 

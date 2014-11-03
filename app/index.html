@@ -11,7 +11,9 @@
 		<main id="hf_appHook">
 			<div id="imageFace"></div>
 			<img id="imageHair" src="" crossorigin="Anonymous" />
-			<canvas id="displayPane" width="484" height="613" data-caman-hidpi-disabled ></canvas>
+			<canvas id="displayPane" width="484" height="613" ></canvas>
+			<canvas id="displayPaneHighlight" width="484" height="613" ></canvas>
+			<div id="placeholder"></div>
 			<img id="imageLoad" src="images/loading.gif">
 			<p id="imageID">00001</p>
 			<div id="leftPaneWrapper">
@@ -20,7 +22,9 @@
 			</div>
 			<a href="http://www.hairfinder.com" id="logoLink">Powered by<br/><span>hairfinder.com</span></a>
 			<div id="topPane"></div>
-			<div id="bottomPane"></div>
+			<div id="bottomPaneWrapper">
+				<div id="bottomPane"></div>
+			</div>
 		</main>
 
 		<div id="scriptTags">
@@ -56,74 +60,84 @@
 				<div class="bottomMenuItem" id="<%=hf_buttonID%>">
 					<%=hf_buttonName%>
 				</div>
-				<div class="bottomMenuSubWrapper">
-					<ul class="bottomMenuSub" id="<%=hf_buttonID%>Sub"></ul>
+				<div class="bottomMenuSubWrapper <%=hf_buttonID%>Sub">
+					<div class="bottomMenuSub" id="<%=hf_buttonID%>Sub"></div>
 				</div>
 			</script>
 
 			<!-- COLOR VIEWS -->
 			<script id="hf_colorHairElement" type="text/template">
-				<div class="colorHair" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
+				<div class="colorHair <%=hf_display_type%>" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
 			</script>
 			<script id="hf_colorHighlightElement" type="text/template">
-				<div class="colorHair"></div>
 				<div class="colorHighlight" style="background-color:<%=hf_color_value%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
+				<div class="colorHair2 <%=hf_display_type%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
 			</script>
 
-			<!--<script id="hf_accountMenuElement" type="text/template">
-				<form class="accountMenu accountSignedOut">
-					Please enter your account info<br/>
-					Email:<br/>
-					<input id="hf_signedOutEmail" type="text"><br/>
-					Password:<br/>
-					<input id="hf_signedOutPassword" type="text"><br/>
-					<input id="hf_signedOutRememberMe" name="rememberMe" type="checkbox"><br/>
+			<script id="hf_accountMenuElement" type="text/template">
+				<form name="accountSignedOut" class="accountMenu accountSignedOut" method="post">
+					<h2>Please enter your account info</h2>
+					<p>Email:</p>
+					<input class="accountMenuInputText" id="hf_signedOutEmail" required type="email">
+					<p>Password:</p>
+					<input class="accountMenuInputText" id="hf_signedOutPassword" required type="password">
+					<p>Remember Me</p>
+					<input class="accountMenuInputCheck" id="hf_signedOutRememberMe" name="rememberMe" type="checkbox"><br/>
 
-					<input id="hf_signedOutSignIn" name="signIn" type="submit"><br/>
-					<input id="hf_signedOutForgotPassword" name="forgotPassword" type="submit"><br/>
-					<input id="hf_signedOutRegister" name="register" type="submit">
+					<input class="accountMenuInputButton" class="inputText" id="hf_signedOutSignIn" value="Sign In" name="signIn" type="submit">
+					<input class="accountMenuInputButton" id="hf_signedOutForgotPassword" value="Forgot Password" name="forgotPassword" type="submit">
+					<input class="accountMenuInputButton" id="hf_signedOutRegister" value="Register" name="register" type="submit">
 				</form>
-				<form class="accountMenu accountSignedIn">
-					Update your account settings<br/>
-					Password:<br/>
-					<input id="hf_signedInPassword" type="text"><br/>
-					<input id="hf_signedInPasswordConfirm" type="text"><br/>
+				<form name="accountSignedIn" class="accountMenu accountSignedIn" method="post">
+					<h2>Update your account settings</h2>
+					<p>New Password:</p>
+					<input class="accountMenuInputText" id="hf_signedInPassword" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+					<p>Confirm Password</p>
+					<input class="accountMenuInputText" id="hf_signedInPasswordConfirm" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+					<input class="accountMenuInputButton" id="hf_signedInUpdatePassword" value="Update Password" type="submit"><br/>
+
+					<p>Gender</p>
 					<select id="hf_signedInGender">
 						<option id="hf_signedInGender_Female">Female</option>
 						<option id="hf_signedInGender_Male">Male</option>
-					</select><br/>
-					<input id="hf_signedInUpdate" type="submit"><br/>
-					<input id="hf_signedInSignOut" type="submit"><br/>
-					<input id="hf_signedInDelete" type="submit">
+					</select>
+					<input class="accountMenuInputButton" id="hf_signedInUpdateGender" value="Update Gender" type="submit"><br/>
+					<input class="accountMenuInputButton" id="hf_signedInSignOut" value="Sign Out" type="submit">
+					<input class="accountMenuInputButton" id="hf_signedInDelete" value="Delete Account"  type="submit">
 				</form>
-				<form class="accountMenu accountRegister">
-					Please fill out the form below to register your account:<br/>
-					<input id="hf_registerEmail" type="text"><br/>
-					<input id="hf_registerPassword" type="text"><br/>
-					<input id="hf_registerPasswordConfirm" type="text"><br/>
-					<input id="hf_registerGender">
+				<form name="accountRegister" class="accountMenu accountRegister" method="post">
+					<h2>Please fill out the form below to register your account:</h2>
+					<p>Email</p>
+					<input class="accountMenuInputText" id="hf_registerEmail" required= type="email">
+					<p>Password</p>
+					<input class="accountMenuInputText" id="hf_registerPassword" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" >
+					<p>Confirm Password</p>
+					<input class="accountMenuInputText" id="hf_registerPasswordConfirm" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" >
+					<p>Gender</p>
+					<select id="hf_registerGender" required>
 						<option id="hf_registerGender_Female">Female</option>
 						<option id="hf_registerGender_Male">Male</option>
 					</select><br/>
-					<input id="hf_registerSubmit" type="submit">
+					<input class="accountMenuInputButton" id="hf_registerSubmit" type="submit" value="Register">
 				</form>
-				<form class="accountMenu accountDelete">
-					Are you sure you want to delete your account?<br/>
-					<input id="hf_deleteYes" type="submit"><br/>
-					<input id="hf_deleteNo" type="submit">
+				<form name="accountDelete" class="accountMenu accountDelete" method="post">
+					<h2>Are you sure you want to delete your account?</h2>
+					<input class="accountMenuInputButton" id="hf_deleteYes" type="submit" value="Yes"><br/>
+					<input class="accountMenuInputButton" id="hf_deleteNo" type="submit" value="No">
 				</form>
-				<form class="accountMenu accountForgot">
-					Enter the email connected to your account below, and we'll email you your password<br/>
-					<input id="hf_forgotEmail" type="text"><br/>
-					<input id="hf_forgotConfrom" type="text">
+				<form name="accountForgot" class="accountMenu accountForgot" method="post">
+					<h2>Enter the email connected to your account below, and we'll email you your password</h2>
+					<input class="accountMenuInputText" id="hf_forgotEmail" type="text"><br/>
+					<input class="accountMenuInputButton" id="hf_forgotSend" type="submit" value="Send New Password">
 				</form>
-			</script>-->
+			</script>
 			<script id="hf_share" type="text/template"></script>
 		</div>
 
 		<script src="js/libs/jquery.js"></script>
 		<script src="js/libs/underscore.js"></script>
 		<script src="js/libs/backbone.js"></script>
+		<script src="js/libs/context-blender/context_blender.js"></script>
 		<script src="js/models/model_color.js"></script>
 		<script src="js/models/model_face.js"></script>
 		<script src="js/models/model_hairstyle.js"></script>
@@ -144,7 +158,7 @@
 		<script src="js/views/view_collection_hairstyles.js"></script>
 		<script src="js/views/view_collection_topMenu.js"></script>
 		<script src="js/views/view_collection_bottomMenu.js"></script>
-		<!--<script src="js/routes/router.js"></script>-->
+		<script src="js/apiCalls.js"></script>
 		<script src="js/hairFinderApp.js"></script>
 	</body>
 </html>

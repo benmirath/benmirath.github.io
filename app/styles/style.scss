@@ -7,7 +7,7 @@ $thumbnailSize: 87px;
     src: url(../fonts/Bellerose.ttf);
 }
 
-* {
+*:not(input) {
 	margin: 0;
 	padding: 0;
 	font-family: $fontFamily;
@@ -29,12 +29,12 @@ div {
 	width: 700px;
 	height: 700px;
 	background-color: #e2ccd5;
+	// border-right: solid 8px #49628c;
+	overflow: hidden;
 }
 
-#displayPane {
+#displayPane, #displayPaneHighlight {
 	position: absolute;
-	// width: 484px;
-	// height: 613px;
 	left: 208px;
 	top: 44px;
 	border-right: solid 8px #49628c;
@@ -49,9 +49,9 @@ div {
 
 .displayImage {
 	position: absolute;
-	top: 45px;
+	top: 47px;
 	left: 210px;
-	width: 484px;
+	width: 482px;
 	height: 613px;
 }
 #imageFace {
@@ -59,6 +59,7 @@ div {
 	background-size: 100%;
 	background-origin: center;
 	background-repeat: no-repeat;
+	border-right: solid 8px #49628c;
 }
 #imageHair {
 	@extend .displayImage;
@@ -213,10 +214,10 @@ div {
 	overflow: hidden;
 	position: absolute;
 	max-height: 0px;
-	transition: max-height .5s;
-	-webkit-transition: max-height .5s;
+	transition: max-height .25s;
+	-webkit-transition: max-height .25s;
 	background-color: $PrimaryColorDark;
-	pointer-events: none;
+	// pointer-events: none;
 }
 
 // TOP MENU COMPONENTS
@@ -325,111 +326,211 @@ div {
 	left: 0px;
 }
 
-.bottomMenu {
-	@extend #bottomPane;
-	height: 43px;
-	transition: bottom .5s;
-	
-	&.bottomMenuColorActive {
-		bottom: 121px;
+
+	.bottomMenu {
+		@extend #bottomPane;
+		height: 43px;
+		transition: bottom .25s;
+		-webkit-transition: bottom .25s;
+		
 		.hf_bottomMenuItem {
+			@extend .menuItemElement;
+			display: inline-block;
+			float: left;
+			width: 169px;
+			height: 38px;
+			margin: 2px 3px;
 
-		}
-	}
-
-
-	.hf_bottomMenuItem {
-		@extend .menuItemElement;
-		display: inline-block;
-		float: left;
-		width: 169px;
-		height: 38px;
-		margin: 2px 3px;
-
-
-		.bottomMenuItem {
-			pointer-events: none;
-			z-index: 2;
-		}
-		.bottomMenuSub {
-			@extend .menuSubItemElement;
-			
-			li {
-				list-style: none;
+			.bottomMenuItem {
+				pointer-events: none;
+				z-index: 2;
 			}
-			
-		}		
-		#bottomMenuColorSub {
-			left: 0;
-			bottom: 0;
-			width: 700px;
-			height: 120px;
-
-			top: 43px;
-			z-index: 1;
-			ul {
-				display: block;
-				height: 52px;
-				margin-top: 3px;
+			.bottomMenuSub {
+				@extend .menuSubItemElement;
+				li {
+					list-style: none;
+				}
+				
+			}
+			.bottomMenuSubWrapper {
+				overflow: hidden;
+				max-height: 0px;
+				// height:130px;
+			}
+			#bottomMenuColorSub {
+				left: 0;
+				bottom: 0;
+				padding-top: 15px;
+				min-width: 700px;
+				// width: 150%;
+				width: auto;
+				height: 120px;
+				// height: 64px;
 				overflow-x: auto;
 				overflow-y: hidden;
-				pointer-events: auto;
-				cursor: auto;
+				z-index: 1;
 
-				li {
-					width: 50px;
-					height: 50px;
-					display: inline-block;
-					float: left;
-					margin: 2px 10px;
-					border-radius: 50px;
-					cursor: pointer;
+				top: 43px;
+				z-index: 1;
+				ul:first-child {
+					margin-top:-10px;
+				}
+				ul {
+					display: block;
+					height: 52px;
+					width: 120%;
+					margin-top: 3px;
+					overflow-x: auto;
+					overflow-y: hidden;
+					pointer-events: auto;
+					cursor: auto;
 
-					.hairIcon {
-						position: absolute;
-						width: 48px;
-						height: 48px;
+					li {
+						width: 50px;
+						height: 50px;
+						display: inline-block;
+						float: left;
+						margin: 2px 10px;
 						border-radius: 50px;
-						border: 2px solid #8e1c49;
-						&.active {
-							border-color: white;
+						cursor: pointer;
+
+						.hairIcon {
+							position: absolute;
+							width: 48px;
+							height: 48px;
+							border-radius: 50px;
+							border: 2px solid #8e1c49;
+							background-repeat: no-repeat;
+							background-blend-mode: multiply;
+							&.active {
+								border-color: white;
+							}
+						}
+						.colorHair {
+							@extend .hairIcon;						
+							background-image: url('../images/haircolor_icon.png');
+						}
+
+						.colorHair2 {
+							@extend .hairIcon;						
+							background-image: url('../images/hairstreak_icon2.png');
+						}
+						.colorHighlight {
+							@extend .hairIcon;
+							background-image: url('../images/hairstreak_icon.png');
+
 						}
 					}
-					.colorHair {
-						@extend .hairIcon;
-						
-						background-image: url('../images/haircolor_icon.png');
-						background-repeat: no-repeat;
-						background-blend-mode: multiply;
+				}
+			}
+			#bottomMenuAccountSub {
+				hidden: overflow;
+				top: 43px;
+				left: 0px;
+				width: 700px;
+				height: 700px;
+				cursor: auto;
+				z-index: 2;
+
+				.accountMenu {
+					max-height: 0px;
+					opacity: 0;
+					overflow: hidden;
+					transition: max-height .25s opacity .25s;
+					-webkit-transition: max-height .25s opacity .25s;
+				}
+				.accountMenu.active {
+					max-height: 400px;
+					opacity: 1;
+					text-align: left;
+					margin: 75px;
+					cursor: auto;
+
+					h2 {
+						padding-bottom: 50px;
+
 					}
-					.colorHighlight {
-						@extend .hairIcon;
-						background-image: url('../images/hairstreak_icon.png');
+					p {
+						// cursor: auto;
+						margin-top: 10px;
+						// display: inline;
+						// clear: both;
+					}
+
+					input {
+						// float: right;
+						// // margin-right: 150px;
+						// margin-top: -30px;
+						// width: 250px;
+						// pointer-events: auto;
+					}
+
+					.accountMenuInputText {
+						float: right;
+						margin-top: -20px;
+						width: 250px;
+					}
+					.accountMenuInputButton {
+						margin-right: 50px;
+					}
+					.accountMenuInputCheck {
+						// display: inline;
+						float: right;
+						margin-top: -15px;
+						margin-right: 245px;
+					}
+					select {
+						float: right;
+						margin-top: -20px;
+						width: 250px;
+					}
+
+					&.accountSignedOut {
+				
+					}
+					&.accountSignedIn {
+
+					}
+					&.accountRegister {
+						
+					}
+					&.accountDelete {
+						
+					}
+					&.accountForgot {
+						
 					}
 				}
 			}
 
-			
-		}
-		&.active {
-			#bottomMenuColorSub {
-				max-height: 120px;
+			&.active {
+				#bottomMenuColorSub {
+					max-height: 120px;
+					// max-height: 70px;
+				}
+				#bottomMenuAccountSub {
+					// max-height: 120px;
+					max-height: 658px;
+				}
 			}
+		}
+		&.bottomMenuColorActive {
+			bottom: 121px;
+			// bottom: 64px;
+			.hf_bottomMenuItem {
 
-			
-
-			// COLOR MENU
+			}
+		}
+		&.bottomMenuAccountActive {
+			bottom: 658px;
+		}
+		.hf_bottomMenuItem:hover, .hf_bottomMenuItem.active {
+			@extend .menuItemElement:hover;
+		}
+		.hf_bottomMenuItem:last-child {
+			float: right;
 		}
 	}
-	.hf_bottomMenuItem:hover, .hf_bottomMenuItem.active {
-		@extend .menuItemElement:hover;
-	}
-	.hf_bottomMenuItem:last-child {
-		float: right;
-	}
-	
-
-}
 
 #bottomPane.subActive {
 	bottom: 60px;

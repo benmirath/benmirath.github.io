@@ -36,52 +36,8 @@ app.hf_language_option = {
 		ACCOUNT : "Account"
 	}
 };
-// app.hf_menu_option = {
-// 	MODEL : "Model",
-// 	STYLE : "Style",
-// 	LENGTH : "Length",
-// 	TEXTURE : "Texture"
-// };
-// app.hf_model_option = {
-// 	FEMALE : "Female",
-// 	MALE : "Male",
-// 	YOU : "Your face"
-// };
-// app.hf_style_option = {
-// 	ALL : "All",
-// 	SALON : "Salon",
-// 	CELEBRITY : "Celebrity"
-// };
-// app.hf_length_option = {
-// 	ALL : "All",
-// 	SHORT : "Short",
-// 	MEDIUM : "Medium",
-// 	LONG : "Long",
-// 	UPDO : "Updo"
-// };
-// app.hf_texture_option = {
-// 	ALL : "All",
-// 	STRAIGHT : "Straight",
-// 	WAVY : "Wavy",
-// 	CURLY : "Curly"
-// };
-// app.hf_bottom_menu_option = {
-// 	HAIR_COLOR : "Hair Colors",
-// 	LANGUAGE : "Language",
-// 	SAVE_SHARE : "Save/Share ",
-// 	ACCOUNT : "Account"
-// };
 
 var DEBUG = false;
-
-// AJAX PARAMETERS
-var baseURL 							= 'http://hairstyler.fabraz.com/';
-var hairstyleUrlParameters 				= 'api/get_posts/?post_type=hairstyle&include=id,attachments,custom_fields';
-var faceUrlParameters 					= 'api/get_posts/?post_type=model&include=id,attachments,custom_fields';
-var colorUrlParameters 					= 'api/get_posts/?post_type=color&include=id,custom_fields';
-var userAuthenticationNonceRegister		= 'api/get_nonce/?controller=user&method=register';
-var userAuthenticationNonceCookie		= 'api/get_nonce/?controller=user&method=generate_auth_cookie';
-var userAuthenticationCookieParameters 	= 'api/user/generate_auth_cookie/?nonce=';
 
 // MVC VARIABLES
 var hairstyleCollection = new app.hf_collection_hairstyles();
@@ -167,16 +123,36 @@ var bottomMenuView 	= new app.hf_view_collection_bottomMenu( { collection : bott
 
 // SESSION VARIABLES
 // - App Management
+var imageBlank = 'images/blank.png';
 var imageHair = new Image();
+var imageHairHighlight = new Image();
 var colorize = false;
 var curHaircut;
 var curHaircutElement;
 var curFaceElement;
 var curColor = '';
+var curColorHighlight = '';
 
 // - Canvas
 var display;
 var displayContext;
+var tintCanvas;
+var tintCtx;
+
+var displayHighlight;
+var displayContextHighlight;
+var tintCanvasHighlight;
+var tintCtxHighlight;
+
+// var tintCanvas = document.createElement('canvas');
+// tintCanvas.width = display.width;
+// tintCanvas.height = display.height;
+// var tintCtx = tintCanvas.getContext('2d');
+
+// var tintCanvasHighlight = document.createElement('canvas');
+// tintCanvasHighlight.width = display.width;
+// tintCanvasHighlight.height = display.height;
+// var tintCtxHighlight = tintCanvasHighlight.getContext('2d');
 
 // - Left Pane
 var curPage = 1;
@@ -185,7 +161,7 @@ var hairstyles = [];
 
 var userProfile;
 var signedIn = false;
-var login_username;
+// var login_username;
 var login_password;
 var login_email;
 
@@ -196,7 +172,8 @@ $(document).ready(function(){
 function init () {
 	display = document.getElementById('displayPane');
 	displayContext = display.getContext('2d');
-
+	displayHighlight = document.getElementById('displayPaneHighlight');
+	displayHighlightContext = displayHighlight.getContext('2d');
 	// $(document).bind( "contextmenu", function(e) {	return false; } );
 	var fieldString = '';
 	$('#topPane').html(topMenuView.render().el);
@@ -204,33 +181,95 @@ function init () {
 
 	requestFaces();
 	requestHairstyles();
-	// requestColors();
 	renderBottomMenu();
+	registerEvents();
+}
 
-	$('#hf_loginRememberMe').click(function() {
-
-        if ($('#hf_loginRememberMe').is(':checked')) {
+function registerEvents () {
+	$('#hf_signedOutRememberMe').click(function() {
+        if ($('#hf_signedOutRememberMe').is(':checked')) {
             // save username and password
-            localStorage.email = $('#hf_loginEmail').val();
-            localStorage.password = $('#hf_loginPassword').val();
-            localStorage.rememberMe = $('#hf_loginRememberMe').val();
+            localStorage.email = $('#hf_signedOutEmail').val();
+            localStorage.password = $('#hf_signedOutPassword').val();
+            localStorage.rememberMe = $('#hf_signedOutRememberMe').prop('checked');
         } else {
             localStorage.email = '';
             localStorage.password = '';
             localStorage.rememberMe = '';
         }
     });
+    checkForUser();
 
+    $('.accountMenuInputButton').click(function(e) {
+		e.preventDefault();
+		var val = $(e.currentTarget).attr('id');
+		// console.log(val);
+		// $('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+		switch (val) {
+			// SIGNED OUT MENU
+			case "hf_signedOutSignIn":
+				requestUserAuthentication()
+				// account
+			break;
+			case "hf_signedOutForgotPassword":
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountForgot').addClass('active');
+			break;
+			case "hf_signedOutRegister":
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountRegister').addClass('active');
+			break;
+			// SIGNED IN MENU
+			case "hf_signedInUpdatePassword":
+			break;
+			case "hf_signedInUpdateGender":
+				requestUpdateGender();
+			break;
+			case "hf_signedInSignOut":
+				signedIn = false;
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountSignedOut').addClass('active');
+			break;
+			case "hf_signedInDelete":
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountDelete').addClass('active');
+			break;
+			// DELETE MENU
+			case "hf_deleteYes":
+				requestUserDeletion();
+			break;
+			case "hf_deleteNo":
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountSignedIn').addClass('active');
+			break;
+			// REGISTER MENU
+			case "hf_registerSubmit":
+				requestUserRegistration();
+			break;
+		}
+	});
+
+	display.onload = function () {
+		$(display).css('opacity', 1);
+	}
+	displayContext.onload = function () {
+		$(display).css('opacity', 1);
+	}
 	imageHair.onload = function () {
 		$('#imageLoad').hide();
-		if (colorize == true) {
-	  		colorizeHair();
-		} else {
-			displayContext.clearRect(0,0, display.width, display.height);
-			displayContext.globalAlpha = 1;
-			displayContext.drawImage(imageHair, 0, 0);
-		}
-	};
+		$(display).css('opacity', 1);
+		displayContext.clearRect(0,0, display.width, display.height);
+		displayContext.globalAlpha = 1;
+		displayContext.drawImage(imageHair, 0, 0);
+	  	colorizeHair();
+	}
+	imageHairHighlight.onload = function () {
+		$(displayHighlight).css('opacity', 1);
+		displayHighlightContext.clearRect(0,0, display.width, display.height);
+		displayHighlightContext.globalAlpha = 1;
+		displayContext.drawImage(imageHair, 0, 0);
+		colorizeHair();
+	}
 }
 
 
@@ -240,6 +279,10 @@ function checkForUser () {
 		if (localStorage.rememberMe && localStorage.rememberMe != '') {
 			login_email = localStorage.email;
 			login_password = localStorage.password;
+			$('#hf_signedOutEmail').val(login_email);
+			$('#hf_signedOutPassword').val(login_password);
+			$('#hf_signedOutRememberMe').prop('checked', true);
+			requestUserAuthentication ();
 		}
 		// signedIn = true;
 	} else {
@@ -249,156 +292,29 @@ function checkForUser () {
 	// Call to user authentication
 }
 
-// API/BACKEND QUERIES
-function requestUserAuthentication () {
-	$.ajax({
-		url : baseURL + userAuthenticationNonceCookie,
-		type: "GET",
-		dataType: 'json',
-		success : function (response) {
-			console.log("Success");
-			console.log(response);
-			var nonce = response.nonce;
-			$.ajax({
-				// url : response.authentication.oauth1.request,
-				url : baseURL + userAuthenticationCookieParameters + nonce + '&username=adminBen&password=Petrichor2357!',
-				success : function (data) {
-					console.log(baseURL + userAuthenticationCookieParameters + nonce + '&username=adminBen&password=Petrichor2357!');
-					console.log(data);
-				},
-				error : function (data) {
-					console.log(baseURL + userAuthenticationCookieParameters + nonce + '&username=adminBen&password=Petrichor2357!');
-					console.log(data);
-				}
-			});
-		},
-		error : function (response) {
-			console.log("Error");
-			console.log(response)
-		}
-	});	
-}
-function requestFaces () {
-	$.ajax({
-		url : baseURL + faceUrlParameters+"&count=-1",
-		crossDomain : true,
-		xhrFields : {
-			withCredentials : true
-		},
-		headers: {
-		     'Authorization': "Basic XXXXX"
-		},
-		type: "GET",
-		dataType: 'jsonp',
-		mimeType : 'image/png',
-		success : function (response) {
-			var models = [];
-			for (obj in response.posts) {
-				var model = new app.hf_model_face({
-					hf_id : response.posts[obj].custom_fields.model_id[0],
-					hf_gender : response.posts[obj].custom_fields.model_gender[0],
-					hf_image_full : _.where( response.posts[obj].attachments, { id : parseInt(response.posts[obj].custom_fields.model_image_detail[0]) } )[0].url,
-					hf_image_thumb : _.where( response.posts[obj].attachments, { id : parseInt(response.posts[obj].custom_fields.model_image_thumbnail[0]) } )[0].url
-				});
-				models.push(model);
-			}
-			models.sort(compareHairstyle);
-			facesCollection = new app.hf_collection_faces (models);
-			facesCollectionView = new app.hf_view_collection_faces( { collection : facesCollection } );
-			$('#imageFace').css('background-image', 'url('+facesCollection.models[0].attributes.hf_image_full+')');
-		},
-		error : function (response) {
+function sanitizeUserTextInput () {
 
-		}
-	});
-}
-function requestHairstyles () {
-	$.ajax({
-		// url : baseURL + hairstyleUrlParameters+"&count=-1", 
-		url : baseURL + hairstyleUrlParameters+'&order=desc&orderby=title&count=14&page='+curPage, 
-		crossDomain : true,
-		xhrFields : {
-			withCredentials : true
-		},
-		headers: {
-		     'Authorization': "Basic XXXXX"
-		},
-		type: "GET",
-		dataType: 'jsonp',
-		mimeType : 'image/png',
-		success : function (response) {
-			for (obj in response.posts) {
-				var hairstyle = new app.hf_model_hairstyle ({
-					hf_id : response.posts[obj].custom_fields.hairstyle_id[0],
-					hf_gender : response.posts[obj].custom_fields.hairstyle_gender[0],
-					hf_length : response.posts[obj].custom_fields.hairstyle_length[0],
-					hf_texture : response.posts[obj].custom_fields.hairstyle_texture[0],
-					hf_style : response.posts[obj].custom_fields.hairstyle_style[0],
-					hf_imageThumbnail : _.where( response.posts[obj].attachments, { id : parseInt(response.posts[obj].custom_fields.hairstyle_image_thumbnail[0]) } )[0].url,
-					hf_imageOriginal : _.where( response.posts[obj].attachments, { id : parseInt(response.posts[obj].custom_fields.hairstyle_image_original[0])} )[0].url,
-					hf_imageGrayscale : _.where( response.posts[obj].attachments, { id : parseInt(response.posts[obj].custom_fields.hairstyle_image_grayscale[0]) } )[0].url					
-				});
-				hairstyles.push(hairstyle);
-			}
-			hairstyleCollection = new app.hf_collection_hairstyles(hairstyles);
-			hairstyleCollectionView = new app.hf_view_collection_hairstyles( { collection : hairstyleCollection } );
-			updateLeftPaneView();
-			if (curPage == 1) {
-				curHaircut = hairstyleCollection.models[0];
-				curHaircutElement = $('.hf_collection_hairstyle div:first-child .hairstyleElementFilter').attr('id');
-				imageHair.src = curHaircut.attributes.hf_imageOriginal;
-				
-			}
-			$('#'+curHaircutElement).addClass('active');
-			if (curPage < response.pages) {
-				curPage++;
-				requestHairstyles();
-			}
-		},
-		error : function (response) {
-			console.log(response);
-		}
-	});
-}
-function requestColors () {
-	$.ajax({
-		url : baseURL + colorUrlParameters+"&count=-1",
-		crossDomain : true,
-		xhrFields : {
-			withCredentials : true
-		},
-		headers : {
-		     'Authorization': "Basic XXXXX"
-		},
-		type : "GET",
-		dataType : 'jsonp',
-		mimeType : 'image/png',
-		success : function (response) {
-			var colors = [];
-			for (obj in response.posts) {
-				var color = new app.hf_model_color ({
-					hf_color_name : response.posts[obj].custom_fields.color_name[0],
-					hf_color_value : response.posts[obj].custom_fields.color_value[0]
-				});
-				colors.push(color);
-			}
-			colors.sort(compareColors);
-			colorCollection = new app.hf_collection_colors(colors);
-			colorCollectionHairView = new app.hf_view_collection_colors ( { collection : colorCollection } );
-			colorCollectionHairView.setDisplayType(app.hf_color_display_type.HAIR);
-			colorCollectionHighlightView = new app.hf_view_collection_colors ( { collection : colorCollection } );
-			colorCollectionHighlightView.setDisplayType(app.hf_color_display_type.HIGHLIGHT);
-			$('#bottomPane #bottomMenuColorSub').append(colorCollectionHairView.render().el);
-			$('#bottomPane #bottomMenuColorSub').append(colorCollectionHighlightView.render().el);
-		}
-	});
 }
 
+function checkPasswordMatch(id1, id2) {
+    // var password = $("#hf_signedInPassword").val();
+    // var confirmPassword = $("#hf_signedInPasswordConfirm").val();
+
+    if (id1.val() != id2.val()) {
+    	$(id1).css('border-color', '#ff0000');
+    	$(id2).css('border-color', '#ff0000');
+    } else {
+    	$(id1).css('border-color', '#008000');
+    	$(id2).css('border-color', '#008000');
+    }
+}
+// var test5;
 // UPDATE UI METHODS
 function renderBottomMenu () {
 	requestColors();
 	renderAccountMenuView();
 }
+
 function updateLanguageMenuView () {
 	languagesCollection;
 	languagesCollectionView;
@@ -411,27 +327,7 @@ function updateShareMenuView () {
 
 }
 function renderAccountMenuView () {
-	console.log('rendering bottom menu');
-	var menuContent = $('<div id="accountMenu"></div>');
-	var accountSignedOut = $('<form class="accountMenu accountSignedOut">Please enter your account info<br/>Email:<br/><input id="hf_signedOutEmail" type="text"><br/>Password:<br/><input id="hf_signedOutPassword" type="text"><br/><input id="hf_signedOutRememberMe" name="rememberMe" type="checkbox"><br/><input id="hf_signedOutSignIn" name="signIn" type="submit"><br/><input id="hf_signedOutForgotPassword" name="forgotPassword" type="submit"><br/><input id="hf_signedOutRegister" name="register" type="submit"></form>');
-	var accountSignedIn = $('<form class="accountMenu accountSignedIn">Update your account settings<br/>Password:<br/><input id="hf_signedInPassword" type="text"><br/><input id="hf_signedInPasswordConfirm" type="text"><br/><select id="hf_signedInGender"><option id="hf_signedInGender_Female">Female</option><option id="hf_signedInGender_Male">Male</option></select><br/><input id="hf_signedInUpdate" type="submit"><br/><input id="hf_signedInSignOut" type="submit"><br/><input id="hf_signedInDelete" type="submit"></form>');
-	var accountRegister = $('<form class="accountMenu accountRegister">Please fill out the form below to register your account:<br/><input id="hf_registerEmail" type="text"><br/><input id="hf_registerPassword" type="text"><br/><input id="hf_registerPasswordConfirm" type="text"><br/><input id="hf_registerGender"><option id="hf_registerGender_Female">Female</option><option id="hf_registerGender_Male">Male</option></select><br/><input id="hf_registerSubmit" type="submit"></form>');
-	var accountDelete = $('<form class="accountMenu accountDelete">Are you sure you want to delete your account?<br/><input id="hf_deleteYes" type="submit"><br/><input id="hf_deleteNo" type="submit"></form>');
-	var accountForgot = $('<form class="accountMenu accountForgot">Enter the email connected to your account below, and we\'ll email you your password<br/><input id="hf_forgotEmail" type="text"><br/><input id="hf_forgotConfrom" type="text"></form>');
-
-	menuContent.append(accountSignedOut);
-	menuContent.append(accountSignedIn);
-	menuContent.append(accountRegister);
-	menuContent.append(accountDelete);
-	menuContent.append(accountForgot);
-	console.log(menuContent);
-	$('.bottomMenuSubWrapper').append(menuContent);
-
-	// accountModel.constructor.template;
-	// accountModelView;
-	// bottomMenuItem4.template
-	// _.template( $('#hf_faceElement').html() ),
-
+	$('#bottomMenuAccountSub').append($('#hf_accountMenuElement').html());
 }
 function updateLeftPaneView () {
 	var queryObj = {}
@@ -452,24 +348,82 @@ function updateLeftPaneView () {
 		$('#leftPane').empty().html(hairstyleCollectionView.render().el);	
 	}
 }
+
+
+
 function updateLanguages () {
 	
 }
+// function colorizeHair () {
+// 	displayContext.clearRect(0,0, display.width, display.height);
+// 	displayContext.globalAlpha = 1;
+// 	displayContext.drawImage(imageHair, 0, 0);
+// 	displayContext.globalAlpha = 0.4;
+
+// 	if (curColor !== '') {
+// 		tintCanvas = document.createElement('canvas');
+// 		tintCanvas.width = display.width;
+// 		tintCanvas.height = display.height;
+
+// 		tintCtx = tintCanvas.getContext('2d');
+// 		tintCtx.fillStyle = curColor;
+// 	    tintCtx.fillRect(0,0,tintCanvas.width,tintCanvas.height);
+// 	    tintCtx.globalCompositeOperation = "destination-atop";
+// 	    // tintCtx.globalCompositeOperation = "multiply";
+// 	    tintCtx.drawImage(imageHair, 0, 0);
+
+// 	    displayContext.drawImage(tintCanvas, 0, 0);
+// 	}
+// 	if (curColorHighlight !== '') {
+// 		tintCanvasHighlight = document.createElement('canvas');
+// 		tintCanvasHighlight.width = display.width;
+// 		tintCanvasHighlight.height = display.height;
+		
+// 		tintCtxHighlight = tintCanvasHighlight.getContext('2d');
+// 		tintCtxHighlight.fillStyle = curColorHighlight;
+// 	    tintCtxHighlight.fillRect(0,0,tintCanvasHighlight.width, tintCanvasHighlight.height);
+// 	    tintCtxHighlight.globalCompositeOperation = "destination-atop";
+// 	    // tintCtxHighlight.globalCompositeOperation = "multiply";
+// 	    tintCtxHighlight.drawImage(imageHairHighlight, 0, 0);
+// 	    displayContext.drawImage(tintCanvasHighlight, 0, 0);	
+// 	}
+// }
+
 function colorizeHair () {
 	displayContext.clearRect(0,0, display.width, display.height);
-	var tintCanvas = document.createElement('canvas');
-	tintCanvas.width = display.width;
-	tintCanvas.height = display.height;
-	var tintCtx = tintCanvas.getContext('2d');
+	displayContext.globalAlpha = 1;
+	displayContext.drawImage(imageHair, 0, 0);
+	displayContext.globalAlpha = 0.4;
 
-	tintCtx.fillStyle = curColor;
-    tintCtx.fillRect(0,0,tintCanvas.width,tintCanvas.height);
-    tintCtx.globalCompositeOperation = "destination-atop";
-    tintCtx.drawImage(imageHair, 0, 0);
-    displayContext.globalAlpha = 1;
-    displayContext.drawImage(imageHair, 0, 0);
-    displayContext.globalAlpha = 0.25;
-	displayContext.drawImage(tintCanvas, 0, 0);	
+	if (curColor !== '') {
+		tintCanvas = document.createElement('canvas');
+		tintCanvas.width = display.width;
+		tintCanvas.height = display.height;
+
+		tintCtx = tintCanvas.getContext('2d');
+		tintCtx.fillStyle = curColor;
+	    tintCtx.fillRect(0,0,tintCanvas.width,tintCanvas.height);
+	    tintCtx.globalCompositeOperation = "destination-atop";
+	    tintCtx.drawImage(imageHair, 0, 0);
+	    tintCtx.blendOnto (displayContext, 'overlay');
+	}
+	if (curColorHighlight !== '') {
+		displayHighlightContext.clearRect(0,0, displayHighlight.width, displayHighlight.height);
+		displayHighlightContext.globalAlpha = 1;
+		displayHighlightContext.drawImage(imageHairHighlight, 0, 0);
+		displayHighlightContext.globalAlpha = 0.4;
+		
+		tintCanvasHighlight = document.createElement('canvas');
+		tintCanvasHighlight.width = displayHighlight.width;
+		tintCanvasHighlight.height = displayHighlight.height;		
+		
+		tintCtxHighlight = tintCanvasHighlight.getContext('2d');
+		tintCtxHighlight.fillStyle = curColorHighlight;
+		tintCtxHighlight.fillRect(0,0,tintCanvasHighlight.width, tintCanvasHighlight.height);
+		tintCtxHighlight.globalCompositeOperation = "destination-atop";		
+		tintCtxHighlight.drawImage(imageHairHighlight, 0, 0);
+		tintCtxHighlight.blendOnto (displayHighlightContext, 'overlay');
+	}
 }
 
 function compareHairstyle(a,b) {
@@ -480,9 +434,9 @@ function compareHairstyle(a,b) {
   return 0;
 }
 function compareColors(a,b) {
-  // if (a.attributes.hf_id < b.attributes.hf_id)
-  //    return -1;
-  // if (a.attributes.hf_id > b.attributes.hf_id)
-  //   return 1;
-  // return 0;
+	if (a.attributes.hf_color_categoryIndex < b.attributes.hf_color_categoryIndex)
+		return -1;
+	if (a.attributes.hf_color_categoryIndex > b.attributes.hf_color_categoryIndex)
+		return 1;
+	return 0;
 }

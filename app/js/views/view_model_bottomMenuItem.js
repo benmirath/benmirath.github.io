@@ -16,10 +16,12 @@ app.hf_view_model_bottomMenuItem = Backbone.View.extend({
 		'click' : 'toggleMenu'
 	},
 	toggleMenu : function (e) {
-		// targetting base bottom menu item
+		if (!e.target.classList.contains('hf_bottomMenuItem')) return;
+		
+		e.preventDefault();
 		targetObj = e.target;
-		console.log(targetObj);
 		if (targetObj.classList.contains('hf_bottomMenuItem') || targetObj.classList.contains('bottomMenuItem')) { 
+			console.log(targetObj);
 			// If active, disable button 
 			if (targetObj.classList.contains('active')) {
 				this.model.attributes.hf_buttonActive = false;
@@ -43,8 +45,33 @@ app.hf_view_model_bottomMenuItem = Backbone.View.extend({
 				this.$el.parent().removeClass('bottomMenuAccountActive');
 				this.$el.parent().addClass(this.model.attributes.hf_buttonID+'Active');
 			}
-
 		}
-
-	}
+		if ($(targetObj).has('#bottomMenuAccount')) {
+			$('.accountMenu.active').each( function () { $(this).removeClass('active') } );
+			if (signedIn) {
+				$('.accountSignedIn').addClass('active');
+			} else {
+				$('.accountSignedOut').addClass('active');
+			}
+		}
+	},
 });
+
+function menuFunctionAccountRegister () {
+	// $('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+	// $('.accountSignedOut').removeClass('active');
+	$('.accountRegister').addClass('active');
+	console.log("working");
+}
+
+function menuFunctionAccountForgot () {
+	$('.accountaccountSignedOut').addClass('active');
+}
+function menuFunctionAccountSignedOut () {
+	// $('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+	// $('.accountSignedOut').removeClass('active');
+	$('.accountaccountSignedOut').addClass('active');	
+}
+function menuFunctionAccountSignIn () {
+
+}
