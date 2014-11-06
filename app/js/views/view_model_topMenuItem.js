@@ -11,7 +11,8 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 		var subMenu = this.$el.children('.topMenuSub');
 		for (subItem in this.model.attributes.hf_buttonSubMenu) {
 			// console.log("loop val: "+subItem);
-			var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + this.model.attributes.hf_buttonSubMenu[subItem] + '" data-subValue='+subItem+'>' + this.model.attributes.hf_buttonSubMenu[subItem] + '</li>');
+			// var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + this.model.attributes.hf_buttonSubMenu[subItem] + '</li>');
+			var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + language_topMenu_Model(this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('')) + '</li>');
 			if (subItem == 0) newSub.addClass('active');
 			subMenu.append(newSub);
 		}
@@ -23,18 +24,15 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 	toggleMenu : function (e) {
 		var targetObj = e.target;
 		// TOP MENU
-		if (targetObj.classList.contains('hf_topMenuItem')) {			
+		if (targetObj.classList.contains('hf_topMenuItem')) {
 			// disable button and sub
-			if (targetObj.classList.contains('active')){
+			if (targetObj.classList.contains('active')) {
 				this.model.attributes.hf_buttonActive = false;
-
-				
 				this.$el.removeClass('active');
 				this.$el.children('.topMenuSub').removeClass('active');
 			} 
 			// enable button and sub, and disable other buttons
-			else {
-				
+			else {	
 				$('.hf_topMenuItem.active').each (function() { 
 					$(this).removeClass('active');
 					$(this).children('.topMenuSub').removeClass('active');
@@ -46,7 +44,7 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 				this.$el.addClass('active');
 				this.$el.children('.topMenuSub').addClass('active');
 			}
-			updateLeftPaneView ();
+			// updateLeftPaneView ();
 		} 
 		//SUB MENU
 		else {
@@ -64,7 +62,8 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 			}
 			if ($(targetObj).data('subvalue') != 0) $(targetObj).parent().parent().addClass('subActive');
 			else $(targetObj).parent().parent().removeClass('subActive');
-			updateLeftPaneView();
+			// updateLeftPaneView ();
 		}
+		updateLeftPaneView ();
 	}
 });

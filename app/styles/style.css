@@ -31,7 +31,7 @@ div {
   top: 44px;
   border-right: solid 8px #49628c; }
 
-.displayImage, #imageFace, #imageHair {
+.displayImage, #imageFace, #imageHair, #userWebcamDisplay {
   position: absolute;
   top: 47px;
   left: 210px;
@@ -153,7 +153,8 @@ div {
 #leftPane::-webkit-scrollbar {
   display: none; }
 
-.menuItemElement, .topMenu .hf_topMenuItem, .bottomMenu .hf_bottomMenuItem {
+.menuItemElement, .topMenu .hf_topMenuItem, .bottomMenu .hf_bottomMenuItem, .bottomMenu .hf_bottomMenuItem #bottomMenuAccountSub .accountMenu.active .accountMenuInputButton {
+  font-family: 'bellerose', sans-serif;
   font-size: 26px;
   text-align: center;
   line-height: 30px;
@@ -163,7 +164,7 @@ div {
   -webkit-transition: background-color .25s;
   cursor: pointer; }
 
-.menuItemElement:hover, .topMenu .hf_topMenuItem:hover, .topMenu .hf_topMenuItem.active, .topMenu .hf_topMenuSubItem.active, .topMenu .hf_topMenuSubItem:hover, .bottomMenu .hf_bottomMenuItem:hover, .bottomMenu .hf_bottomMenuItem.active {
+.menuItemElement:hover, .topMenu .hf_topMenuItem:hover, .topMenu .hf_topMenuItem.active, .topMenu .hf_topMenuSubItem.active, .topMenu .hf_topMenuSubItem:hover, .bottomMenu .hf_bottomMenuItem:hover, .bottomMenu .hf_bottomMenuItem #bottomMenuAccountSub .accountMenu.active .accountMenuInputButton:hover, .bottomMenu .hf_bottomMenuItem.active {
   background-color: #5d112e;
   color: white; }
 
@@ -347,8 +348,29 @@ div {
           margin-right: 245px; }
         .bottomMenu .hf_bottomMenuItem #bottomMenuAccountSub .accountMenu.active select {
           float: right;
-          margin-top: -20px;
-          width: 250px; }
+          margin-top: -30px;
+          margin-bottom: 30px;
+          padding-left: 20px;
+          width: 250px;
+          color: #fff;
+          background-color: #a92057;
+          font-size: 24px;
+          transition: background-color .25s;
+          -webkit-transition: background-color .25s;
+          -moz-transition: background-color .25s;
+          border: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none; }
+        .bottomMenu .hf_bottomMenuItem #bottomMenuAccountSub .accountMenu.active .accountMenuInputButton {
+          margin-top: 40px;
+          font-family: 'bellerose';
+          border: none;
+          font-size: 24px;
+          line-height: 18px;
+          padding: 5px 30px;
+          padding-bottom: 20px;
+          min-width: 200px; }
     .bottomMenu .hf_bottomMenuItem.active #bottomMenuColorSub {
       max-height: 120px; }
     .bottomMenu .hf_bottomMenuItem.active #bottomMenuAccountSub {

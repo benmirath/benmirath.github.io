@@ -11,6 +11,10 @@
 		<main id="hf_appHook">
 			<div id="imageFace"></div>
 			<img id="imageHair" src="" crossorigin="Anonymous" />
+
+
+			<video id="userWebcamDisplay" autoplay></video>
+			<!-- <input id="userWebcamDisplay" type="file" accept="image/*;capture=camera"></input> -->
 			<canvas id="displayPane" width="484" height="613" ></canvas>
 			<canvas id="displayPaneHighlight" width="484" height="613" ></canvas>
 			<div id="placeholder"></div>
@@ -90,18 +94,16 @@
 				</form>
 				<form name="accountSignedIn" class="accountMenu accountSignedIn" method="post">
 					<h2>Update your account settings</h2>
-					<p>New Password:</p>
-					<input class="accountMenuInputText" id="hf_signedInPassword" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
-					<p>Confirm Password</p>
-					<input class="accountMenuInputText" id="hf_signedInPasswordConfirm" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
-					<input class="accountMenuInputButton" id="hf_signedInUpdatePassword" value="Update Password" type="submit"><br/>
-
 					<p>Gender</p>
 					<select id="hf_signedInGender">
 						<option id="hf_signedInGender_Female">Female</option>
 						<option id="hf_signedInGender_Male">Male</option>
 					</select>
-					<input class="accountMenuInputButton" id="hf_signedInUpdateGender" value="Update Gender" type="submit"><br/>
+					<p>Language</p>
+					<select id="hf_signedInLanguage">
+						<option>placeholder</option>
+					</select>
+					<input class="accountMenuInputButton" id="hf_signedInUpdateSettings" value="Update Settings" type="submit"><br/>
 					<input class="accountMenuInputButton" id="hf_signedInSignOut" value="Sign Out" type="submit">
 					<input class="accountMenuInputButton" id="hf_signedInDelete" value="Delete Account"  type="submit">
 				</form>
@@ -159,6 +161,8 @@
 		<script src="js/views/view_collection_topMenu.js"></script>
 		<script src="js/views/view_collection_bottomMenu.js"></script>
 		<script src="js/apiCalls.js"></script>
+		<script src="js/webcam.js"></script>
+		<script src="js/languages.js"></script>
 		<script src="js/hairFinderApp.js"></script>
 	</body>
 </html>

@@ -1,15 +1,14 @@
 // AJAX PARAMETERS
 var baseURL 							= 'http://hairstyler.fabraz.com/';
-var hairstyleUrlParameters 				= 'api/get_posts/?post_type=hairstyle&include=id,attachments,custom_fields';
-var faceUrlParameters 					= 'api/get_posts/?post_type=model&include=id,attachments,custom_fields';
-var colorUrlParameters 					= 'api/get_posts/?post_type=color&include=id,custom_fields';
-
+var postRequestURL 						= 'api/get_posts/';
 var userAuthenticationNonceRegister		= 'api/get_nonce/?controller=user&method=register';
 var userAuthenticationNonceCookie		= 'api/get_nonce/?controller=user&method=generate_auth_cookie';
 var userAuthenticationCookieParameters 	= 'api/user/generate_auth_cookie/';
 var userGetMetaURL						= 'api/user/get_user_meta/';
 var userSetMetaURL						= 'api/user/update_user_meta/';
-// var userRegistrationParameters			= 'api/user/register/?'
+var userForgotPasswordURL				= 'api/user/retrieve_password/';
+var userSetPassword						= 'api/hairstyle/update_password/';
+
 var userRegistrationParameters			= 'api/hairstyle/custom_register/'
 var userDeletionParameters				= 'api/hairstyle/delete_account/';
 var curUser;
@@ -21,16 +20,8 @@ var testData;
 
 // API/BACKEND QUERIES
 function requestUserAuthentication () {
-	// if(typeof(Storage) !== "undefined" && 
-	// 	localStorage.rememberMe !== '' && 
-	// 	localStorage.rememberMe !== '') {
-	// 		login_email = localStorage.email;
-	// 		login_password = localStorage.password;
-	// } else {
-		login_email = $('#hf_signedOutEmail').val();
-		login_password = $('#hf_signedOutPassword').val();
-	// }
-
+	login_email = $('#hf_signedOutEmail').val();
+	login_password = $('#hf_signedOutPassword').val();
 	$.ajax({
 		url : baseURL + userAuthenticationNonceCookie,
 		type: "POST",
@@ -65,7 +56,9 @@ function requestUserAuthentication () {
 							}
 						});
 						signedIn = true;
-						$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+						$('.bottomMenuSub .accountMenu.active').each ( function () { 
+							$(this).removeClass('active'); 
+						});
 						$('.accountSignedIn').addClass('active');
 					}
 				},
@@ -116,7 +109,9 @@ function requestUserRegistration () {
 							alert (data.error);
 						} else {
 							requestUserAuthentication();
-							$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+							$('.bottomMenuSub .accountMenu.active').each ( 
+								function () { $(this).removeClass('active'); 
+							});
 							$('.accountSignedIn').addClass('active');
 						}
 					},
@@ -134,11 +129,24 @@ function requestUserRegistration () {
 		});	
 	} else {
 		alert ("Please make sure that both password fields match.");
-		$('#hf_registerPassword').css('border-color', '#ff0000');
-    	$('#hf_registerPasswordConfirm').css('border-color', '#ff0000');
 	}
 }
-
+function requestLostPassword () {
+	$.ajax({
+		url : baseURL + userForgotPasswordURL,
+		data : {
+			user_login : $('#hf_forgotEmail').val()
+		},
+		type : 'POST',
+		success : function (data) {
+			console.log(data);
+		},
+		error : function (data) {
+			console.log("AJAX error: lost password failure");
+			console.log(data);
+		}
+	});
+}
 function requestUserDeletion () {
 	$.ajax ({
 		url : baseURL + userAuthenticationNonceCookie,
@@ -146,13 +154,13 @@ function requestUserDeletion () {
 			console.log(data);
 			var nonce = data.nonce;
 			$.ajax({
+				url : baseURL + userDeletionParameters,
+				data : {
+					cookie : curCookie,
+					user_id : curUser.id
+				},
 				type : 'POST',
-				url : baseURL + "api/hairstyle/delete_account/?cookie="+curCookie+"&user_id="+curUser.id,
-				// url : baseURL + "api/hairstyle/delete_account/?cookie="+curCookie,
 				success : function (data) {
-					console.log("Yup");
-					console.log(baseURL + "api/hairstyle/delete_account/?cookie="+curCookie+"&user_id="+curUser.id);
-					console.log(data);
 					signedIn = false;
 					localStorage.email = '';
 					localStorage.password = '';
@@ -183,10 +191,39 @@ function requestUpdateGender () {
 		}
 	});
 }
+function requestUpdatePassword () {
+	var desiredPassword = $('#hf_signedInPassword').val();
+	var confirmPassword = $('#hf_signedInPasswordConfirm').val();
+	if (desiredPassword === confirmPassword) {
+		$.ajax({
+			url : baseURL + userSetPassword,
+			type : 'POST',
+			data : {
+				cookie : curCookie,
+				user_id : curUser.id,
+				password : desiredPassword
+			},
+			success : function (data) {
+				console.log(data);
+				alert ("Password has been successfully changed!");
+			},
+			error : function (data) {
+				console.log(data);
+			}
+		});
+	} else {
+		alert ("Please make sure that both password fields match.");
+	}
+}
 
 function requestFaces () {
 	$.ajax({
-		url : baseURL + faceUrlParameters+"&count=-1",
+		url : baseURL + postRequestURL,
+		data : {
+			post_type : "model",
+			include : "id,attachments,custom_fields",
+			count : -1
+		},
 		crossDomain : true,
 		xhrFields : {
 			withCredentials : true
@@ -220,7 +257,15 @@ function requestFaces () {
 }
 function requestHairstyles () {
 	$.ajax({
-		url : baseURL + hairstyleUrlParameters+'&order=desc&orderby=title&count=14&page='+curPage, 
+		url : baseURL + postRequestURL, 
+		data : {
+			post_type : 'hairstyle',
+			includ : 'id, attachments, custom_fields',			// Sooooo, for some reason, this parameter needs to be misspelled. Which is F#$%ing dumb.
+			order : 'desc',
+			orderby : 'title',
+			count : 14,
+			page : curPage
+		},
 		crossDomain : true,
 		xhrFields : {
 			withCredentials : true
@@ -253,7 +298,6 @@ function requestHairstyles () {
 				curHaircut = hairstyleCollection.models[0];
 				curHaircutElement = $('.hf_collection_hairstyle div:first-child .hairstyleElementFilter').attr('id');
 				imageHair.src = curHaircut.attributes.hf_imageOriginal;
-				
 			}
 			$('#'+curHaircutElement).addClass('active');
 			if (curPage < response.pages) {
@@ -268,7 +312,12 @@ function requestHairstyles () {
 }
 function requestColors () {
 	$.ajax({
-		url : baseURL + colorUrlParameters+"&count=-1",
+		url : baseURL + postRequestURL,
+		data : {
+			post_type : "color",
+			include : "id,custom_fields",
+			count : -1
+		}, 
 		crossDomain : true,
 		xhrFields : {
 			withCredentials : true

@@ -29,7 +29,6 @@ div {
 	width: 700px;
 	height: 700px;
 	background-color: #e2ccd5;
-	// border-right: solid 8px #49628c;
 	overflow: hidden;
 }
 
@@ -38,13 +37,6 @@ div {
 	left: 208px;
 	top: 44px;
 	border-right: solid 8px #49628c;
-
-	
-	#imageHair {
-		// filter: hue-rotate(10deg);
-		// -webkit-filter: hue-rotate(10deg);
-		
-	}
 }
 
 .displayImage {
@@ -66,6 +58,9 @@ div {
 	background-color-blend: multiply;
 	-webkit-background-color-blend: multiply;
 	display: none;
+}
+#userWebcamDisplay {
+	@extend .displayImage;
 }
 #imageID {
 	position: absolute;
@@ -197,6 +192,7 @@ div {
 
 
 .menuItemElement {
+	font-family: 'bellerose', sans-serif;
 	font-size: 26px;
 	text-align: center;
 	line-height: 30px;
@@ -217,7 +213,6 @@ div {
 	transition: max-height .25s;
 	-webkit-transition: max-height .25s;
 	background-color: $PrimaryColorDark;
-	// pointer-events: none;
 }
 
 // TOP MENU COMPONENTS
@@ -432,6 +427,7 @@ div {
 				cursor: auto;
 				z-index: 2;
 
+
 				.accountMenu {
 					max-height: 0px;
 					opacity: 0;
@@ -451,18 +447,7 @@ div {
 
 					}
 					p {
-						// cursor: auto;
 						margin-top: 10px;
-						// display: inline;
-						// clear: both;
-					}
-
-					input {
-						// float: right;
-						// // margin-right: 150px;
-						// margin-top: -30px;
-						// width: 250px;
-						// pointer-events: auto;
 					}
 
 					.accountMenuInputText {
@@ -474,16 +459,47 @@ div {
 						margin-right: 50px;
 					}
 					.accountMenuInputCheck {
-						// display: inline;
 						float: right;
 						margin-top: -15px;
 						margin-right: 245px;
 					}
 					select {
 						float: right;
-						margin-top: -20px;
+						margin-top: -30px;
+						margin-bottom: 30px;
+						padding-left: 20px;
 						width: 250px;
+						color: #fff;
+
+						background-color: #a92057;
+						font-size: 24px;
+
+						transition: background-color .25s;
+						-webkit-transition: background-color .25s;
+						-moz-transition: background-color .25s;
+						
+						border: none;
+
+						-webkit-appearance:none;
+					    -moz-appearance:none;
+					    appearance:none;
 					}
+
+					.accountMenuInputButton {
+						@extend .menuItemElement;
+						margin-top: 40px;
+						font-family: 'bellerose';
+						border: none;
+						font-size: 24px;
+						line-height: 18px;
+						padding: 5px 30px;
+						padding-bottom: 20px;
+						min-width: 200px;
+					}
+					.accountMenuInputButton:hover {
+						@extend .menuItemElement:hover;	
+					}
+
 
 					&.accountSignedOut {
 				
@@ -506,17 +522,14 @@ div {
 			&.active {
 				#bottomMenuColorSub {
 					max-height: 120px;
-					// max-height: 70px;
 				}
 				#bottomMenuAccountSub {
-					// max-height: 120px;
 					max-height: 658px;
 				}
 			}
 		}
 		&.bottomMenuColorActive {
 			bottom: 121px;
-			// bottom: 64px;
 			.hf_bottomMenuItem {
 
 			}

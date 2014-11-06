@@ -339,7 +339,7 @@ class JSON_API_User_Controller {
 		if (!$user_id) 	
 			$json_api->error("Invalid cookie. Use the `generate_auth_cookie` method.");
 		
-		if (!$json_api->query->meta_key) 
+		if (!$json_api->query->meta_key)
 			$json_api->error("You must include a 'meta_key' var in your request.");
 		else $meta_key = $json_api->query->meta_key;	
 	  

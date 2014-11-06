@@ -114,11 +114,32 @@ class JSON_API_Hairstyle_Controller {
 		); 		  
 	}   
 	public function update_password () {
+		require_once( ABSPATH . 'wp-includes/pluggable.php' );
+		global $json_api, $wpdb;
 
+		// if (!$json_api->query->cookie) {
+		// 	$json_api->error("Invalid cookie. Use the `generate_auth_cookie` method.");
+		// } else $user_id = $json_api->query->cookie;
+
+		if (!$json_api->query->user_id) {
+			$json_api->error("Invalid id. Use the `generate_auth_cookie` method.");
+		} else $user_id = $json_api->query->user_id;
+
+		if (!$json_api->query->password) {
+			$json_api->error("You must include a 'password' var in your request. Use the `generate_auth_cookie` method.");
+		} else {
+			$password = sanitize_text_field($json_api->query->password);
+			// $hashedPassword = wp_hash_password($password),
+		}
+
+		// $data['user_id']; = $user_id;
+		// $data['password']; = $password;
+		// $data['updated'] = wp_set_password( $password, $user_id );
+		// $data['updated'] = 
+		wp_set_password( $password, $user_id );
+		return $data;
 	}
-	public function update_gender () {
-		
-	}
+
 	public function delete_account () {
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		global $json_api, $wpdb;

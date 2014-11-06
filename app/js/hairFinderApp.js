@@ -9,7 +9,7 @@ app.hf_language_option = {
 	hf_model_option : {
 		FEMALE : "Female",
 		MALE : "Male",
-		YOU : "Your face"
+		YOU : "Your Face"
 	},
 	hf_style_option : {
 		ALL : "All",
@@ -144,16 +144,6 @@ var displayContextHighlight;
 var tintCanvasHighlight;
 var tintCtxHighlight;
 
-// var tintCanvas = document.createElement('canvas');
-// tintCanvas.width = display.width;
-// tintCanvas.height = display.height;
-// var tintCtx = tintCanvas.getContext('2d');
-
-// var tintCanvasHighlight = document.createElement('canvas');
-// tintCanvasHighlight.width = display.width;
-// tintCanvasHighlight.height = display.height;
-// var tintCtxHighlight = tintCanvasHighlight.getContext('2d');
-
 // - Left Pane
 var curPage = 1;
 var totalPages = 0;
@@ -203,13 +193,10 @@ function registerEvents () {
     $('.accountMenuInputButton').click(function(e) {
 		e.preventDefault();
 		var val = $(e.currentTarget).attr('id');
-		// console.log(val);
-		// $('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
 		switch (val) {
 			// SIGNED OUT MENU
 			case "hf_signedOutSignIn":
 				requestUserAuthentication()
-				// account
 			break;
 			case "hf_signedOutForgotPassword":
 				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
@@ -221,8 +208,9 @@ function registerEvents () {
 			break;
 			// SIGNED IN MENU
 			case "hf_signedInUpdatePassword":
+				requestUpdatePassword();
 			break;
-			case "hf_signedInUpdateGender":
+			case "hf_signedInUpdateSettings":
 				requestUpdateGender();
 			break;
 			case "hf_signedInSignOut":
@@ -241,6 +229,11 @@ function registerEvents () {
 			case "hf_deleteNo":
 				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
 				$('.accountSignedIn').addClass('active');
+			break;
+			case "hf_forgotSend":
+				requestLostPassword ();
+				$('.bottomMenuSub .accountMenu.active').each ( function () { $(this).removeClass('active'); } );
+				$('.accountSignedOut').addClass('active');
 			break;
 			// REGISTER MENU
 			case "hf_registerSubmit":
@@ -275,7 +268,6 @@ function registerEvents () {
 
 function checkForUser () {
 	if(typeof(Storage) !== "undefined") {
-		// Code for localStorage/sessionStorage.
 		if (localStorage.rememberMe && localStorage.rememberMe != '') {
 			login_email = localStorage.email;
 			login_password = localStorage.password;
@@ -284,12 +276,9 @@ function checkForUser () {
 			$('#hf_signedOutRememberMe').prop('checked', true);
 			requestUserAuthentication ();
 		}
-		// signedIn = true;
 	} else {
-	    // Sorry! No Web Storage support..
 	    return;
 	}
-	// Call to user authentication
 }
 
 function sanitizeUserTextInput () {
@@ -297,9 +286,6 @@ function sanitizeUserTextInput () {
 }
 
 function checkPasswordMatch(id1, id2) {
-    // var password = $("#hf_signedInPassword").val();
-    // var confirmPassword = $("#hf_signedInPasswordConfirm").val();
-
     if (id1.val() != id2.val()) {
     	$(id1).css('border-color', '#ff0000');
     	$(id2).css('border-color', '#ff0000');
@@ -308,7 +294,7 @@ function checkPasswordMatch(id1, id2) {
     	$(id2).css('border-color', '#008000');
     }
 }
-// var test5;
+
 // UPDATE UI METHODS
 function renderBottomMenu () {
 	requestColors();
@@ -332,9 +318,19 @@ function renderAccountMenuView () {
 function updateLeftPaneView () {
 	var queryObj = {}
 	if (topMenu.models[0].attributes.hf_buttonActive === true) {
-		queryObj = { hf_gender : topMenu.models[0].attributes.hf_buttonSubMenu[topMenu.models[0].attributes.hf_buttonSubState].toLowerCase() }
-		facesCollectionView.collection = new app.hf_collection_faces(facesCollection.where(queryObj));
-		$('#leftPane').empty().html(facesCollectionView.render().el);
+		if ($('#Model_YourFace').hasClass('active')) {
+			console.log("user photo menu triggered");
+			$('#leftPane').empty();
+
+			if (checkMedia()) {
+				loadWebcam();
+			}
+		} else {
+			queryObj = { hf_gender : topMenu.models[0].attributes.hf_buttonSubMenu[topMenu.models[0].attributes.hf_buttonSubState].toLowerCase() }
+			facesCollectionView.collection = new app.hf_collection_faces(facesCollection.where(queryObj));
+			$('#leftPane').empty().html(facesCollectionView.render().el);
+		}
+		
 	}
 	else {
 		queryObj.hf_gender = topMenu.models[0].attributes.hf_buttonSubMenu[topMenu.models[0].attributes.hf_buttonSubState].toLowerCase();
@@ -349,45 +345,6 @@ function updateLeftPaneView () {
 	}
 }
 
-
-
-function updateLanguages () {
-	
-}
-// function colorizeHair () {
-// 	displayContext.clearRect(0,0, display.width, display.height);
-// 	displayContext.globalAlpha = 1;
-// 	displayContext.drawImage(imageHair, 0, 0);
-// 	displayContext.globalAlpha = 0.4;
-
-// 	if (curColor !== '') {
-// 		tintCanvas = document.createElement('canvas');
-// 		tintCanvas.width = display.width;
-// 		tintCanvas.height = display.height;
-
-// 		tintCtx = tintCanvas.getContext('2d');
-// 		tintCtx.fillStyle = curColor;
-// 	    tintCtx.fillRect(0,0,tintCanvas.width,tintCanvas.height);
-// 	    tintCtx.globalCompositeOperation = "destination-atop";
-// 	    // tintCtx.globalCompositeOperation = "multiply";
-// 	    tintCtx.drawImage(imageHair, 0, 0);
-
-// 	    displayContext.drawImage(tintCanvas, 0, 0);
-// 	}
-// 	if (curColorHighlight !== '') {
-// 		tintCanvasHighlight = document.createElement('canvas');
-// 		tintCanvasHighlight.width = display.width;
-// 		tintCanvasHighlight.height = display.height;
-		
-// 		tintCtxHighlight = tintCanvasHighlight.getContext('2d');
-// 		tintCtxHighlight.fillStyle = curColorHighlight;
-// 	    tintCtxHighlight.fillRect(0,0,tintCanvasHighlight.width, tintCanvasHighlight.height);
-// 	    tintCtxHighlight.globalCompositeOperation = "destination-atop";
-// 	    // tintCtxHighlight.globalCompositeOperation = "multiply";
-// 	    tintCtxHighlight.drawImage(imageHairHighlight, 0, 0);
-// 	    displayContext.drawImage(tintCanvasHighlight, 0, 0);	
-// 	}
-// }
 
 function colorizeHair () {
 	displayContext.clearRect(0,0, display.width, display.height);
