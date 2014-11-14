@@ -9,19 +9,22 @@
 	</head>
 	<body>
 		<main id="hf_appHook">
-			<div id="imageFace"></div>
-			<img id="imageHair" src="" crossorigin="Anonymous" />
+			<!-- <div id="imageFace"></div> -->
+			<img id="imageFace" />
+			<!-- <img id="imageHair" src="" crossorigin="Anonymous" /> -->
 
 
-			<video id="userWebcamDisplay" autoplay></video>
+			<div id="userWebcamDisplay" ></div>
+			<!-- <div id="userWebcamResult" ></div> -->
 			<!-- <input id="userWebcamDisplay" type="file" accept="image/*;capture=camera"></input> -->
 			<canvas id="displayPane" width="484" height="613" ></canvas>
 			<canvas id="displayPaneHighlight" width="484" height="613" ></canvas>
-			<div id="placeholder"></div>
+			<!-- <div id="placeholder"></div> -->
 			<img id="imageLoad" src="images/loading.gif">
 			<p id="imageID">00001</p>
 			<div id="leftPaneWrapper">
 				<div id="leftPane"></div>
+				<!-- <div id="leftPaneCustomFace"></div> -->
 				<div id="leftPaneBorder"></div>
 			</div>
 			<a href="http://www.hairfinder.com" id="logoLink">Powered by<br/><span>hairfinder.com</span></a>
@@ -34,7 +37,7 @@
 		<div id="scriptTags">
 			<!-- HAIRSTYLE VIEWS -->
 			<script id="hf_hairstyleElement" type="text/template">
-				<div class="hairstyleElementFilter" id="haircut_num_<%=hf_id%>"><p>More about this hairstyle.</p></div>
+				<div class="hairstyleElementFilter" id="haircut_num_<%=hf_id%>"><a target="_blank" href="<%=hf_url%>"><p>More about this hairstyle.</p></a></div>
 				<img class="hairstyleElement" data-id="<%=hf_id%>" src="<%=hf_imageThumbnail%>" />
 			</script>
 
@@ -78,14 +81,107 @@
 				<div class="colorHair2 <%=hf_display_type%>" data-color_val="<%=hf_color_value%>" data-color-name="<%=hf_color_name%>"></div>
 			</script>
 
+			<script id="hf_sharingMenu" type="text/template">
+				<input class="saveMenuButton" id="share_save" type="button" value="Save to your Device" />
+				<input class="saveMenuButton" id="share_print" type="button" value="Print"/>
+				<div id="saveMenuShareButtons">
+					<a class="mt-facebook mt-share-inline-square-sm" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.hairfinder.com">
+						<img src="http://mojotech-static.s3.amazonaws.com/facebook@2x.png">
+					</a>
+					<a class="mt-twitter mt-share-inline-square-sm" href="http://twitter.com/intent/tweet?text=Find%20your%20new%20look%20with%20the%20Hair%20Finder%20app!&amp;url=http%3A%2F%2Fwww.hairfinder.com">
+						<img src="http://mojotech-static.s3.amazonaws.com/twitter@2x.png">
+					</a>
+					<a class="mt-linkedin mt-share-inline-square-sm" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2Fwww.hairfinder.com&amp;summary=Find%20your%20new%20look%20with%20the%20Hair%20Finder%20app!">
+						<img src="http://mojotech-static.s3.amazonaws.com/linkedin@2x.png">
+					</a>
+					<a class="mt-google mt-share-inline-square-sm" href="https://plus.google.com/share?url=http%3A%2F%2Fwww.hairfinder.com">
+						<img src="http://mojotech-static.s3.amazonaws.com/google@2x.png">
+					</a>
+					<a class="mt-pinterest mt-share-inline-square-sm" href="http://www.pinterest.com/pin/create/button/?url=http%3A%2F%2Fwww.hairfinder.com&amp;media=&amp;guid=1234&amp;description=Find%20your%20new%20look%20with%20the%20Hair%20Finder%20app!">
+						<img src="http://mojotech-static.s3.amazonaws.com/pinterest@2x.png">
+					</a>
+				</div>
+			</script>
+			<!--<script type="text/template" id="hf_languageElementCollection">
+				<h1 id="language_header">Choose your language</h1>
+				<div class="languageCollection">
+					
+
+				</div>
+			</script>-->
+			<script type="text/template" id="hf_languageElement">
+				<%=hf_language_name%>
+			</script>
+	
+	
+	
+			<script id="hf_leftPaneCustom_Display" type="text/template">
+				<div id="userWebcamDisplay" ></div>
+			</script>
+			<script id="hf_leftPaneCustom" type="text/template">
+				
+				<div id="customFace_SignedOut" class="customFaceMenu">
+					<h3 id="customFace_signedOut_header">Please sign in to enable the custom photo feature.</h3>
+				</div>
+				<div id="customFace_SignedIn_Photo" class="customFaceMenu">
+					<h3 id="customFace_photo_header1">Is this picture okay?</h3>
+					<p id="customFace_photo_body">Then start styling your hair!</p>
+
+					<h3 id="customFace_photo_header2">Almost? Adjust it!</h3>
+					<div id="customFace_controls">
+						<div id="customFace_controls_up" class="customFace_controls_button" ></div>
+						<div id="customFace_controls_down" class="customFace_controls_button" ></div>
+						<div id="customFace_controls_right" class="customFace_controls_button"></div>
+						<div id="customFace_controls_left" class="customFace_controls_button"></div>
+						<div id="customFace_controls_plus" class="customFace_controls_button"><strong>+</strong></div>
+						<div id="customFace_controls_minus" class="customFace_controls_button"><strong>-</strong></div>
+						<div id="customFace_controls_reset" class="customFace_controls_button">Reset</div>
+					</div>
+					<h3 id="customFace_photo_header3">No? Try again!</h3>
+					<div class="customFace_upload">
+						<h2>Upload Picture</h2>
+						<div class="fauxUploadWrapper">
+							<div class="fauxUpload"></div>
+							<input id="customFace_uploadInput_photo" type="file" />
+						</div>						
+					</div>
+					<div class="customFace_capture">
+						<h2>Take Picture</h2>
+						<input id="customFace_captureInput_photo" type="submit" value="" />
+					</div>
+				</div>
+				<div id="customFace_SignedIn_TakePhoto" class="customFaceMenu">
+					<p id="customFace_takePhoto_header">For the best resul, make sure the space is well lit and, that you use the silhoutte over the preview as a guide.</p>
+					<div class="customFace_snap">
+						<h2>Snap Picture</h2>
+						<input id="customFace_captureInput_takePhoto" type="submit" value="" />
+					</div>
+				</div>
+				<div id="customFace_SignedIn_NoPhoto" class="customFaceMenu">
+					<h3 id="customFace_noPhoto_header1">Let's get started! Would you like to upload a previous photo, or take a new one right now?</h3>
+					<div class="customFace_upload">
+						<h2>Upload Picture</h2>
+						<div class="fauxUploadWrapper">
+							<div class="fauxUpload"></div>
+							<input id="customFace_uploadInput_noPhoto" type="file" text="" value="" />
+						</div>
+						
+					</div>
+					<div class="customFace_capture">
+						<h2>Take Picture</h2>
+						<input id="customFace_captureInput_noPhoto" type="submit" value="" />
+					</div>
+				</div>
+			</script>
+
 			<script id="hf_accountMenuElement" type="text/template">
 				<form name="accountSignedOut" class="accountMenu accountSignedOut" method="post">
-					<h2>Please enter your account info</h2>
-					<p>Email:</p>
+					<h2 id="account_signedOut_header">Please enter your account info</h2>
+					<p id="account_signedOut_email">Email:</p>
 					<input class="accountMenuInputText" id="hf_signedOutEmail" required type="email">
-					<p>Password:</p>
+					<p id="account_signedOut_password">Password:</p>
 					<input class="accountMenuInputText" id="hf_signedOutPassword" required type="password">
-					<p>Remember Me</p>
+					<p id="account_signedOut_remember">Remember Me</p>
 					<input class="accountMenuInputCheck" id="hf_signedOutRememberMe" name="rememberMe" type="checkbox"><br/>
 
 					<input class="accountMenuInputButton" class="inputText" id="hf_signedOutSignIn" value="Sign In" name="signIn" type="submit">
@@ -93,13 +189,13 @@
 					<input class="accountMenuInputButton" id="hf_signedOutRegister" value="Register" name="register" type="submit">
 				</form>
 				<form name="accountSignedIn" class="accountMenu accountSignedIn" method="post">
-					<h2>Update your account settings</h2>
-					<p>Gender</p>
+					<h2 id="account_signedIn_header">Update your account settings</h2>
+					<p id="account_signedInGender_header">Gender</p>
 					<select id="hf_signedInGender">
 						<option id="hf_signedInGender_Female">Female</option>
 						<option id="hf_signedInGender_Male">Male</option>
 					</select>
-					<p>Language</p>
+					<p id="account_signedInLanguage_header">Language</p>
 					<select id="hf_signedInLanguage">
 						<option>placeholder</option>
 					</select>
@@ -108,14 +204,14 @@
 					<input class="accountMenuInputButton" id="hf_signedInDelete" value="Delete Account"  type="submit">
 				</form>
 				<form name="accountRegister" class="accountMenu accountRegister" method="post">
-					<h2>Please fill out the form below to register your account:</h2>
-					<p>Email</p>
+					<h2 id="account_register_header">Please fill out the form below to register your account:</h2>
+					<p id="account_register_email">Email</p>
 					<input class="accountMenuInputText" id="hf_registerEmail" required= type="email">
-					<p>Password</p>
+					<p id="account_register_password">Password</p>
 					<input class="accountMenuInputText" id="hf_registerPassword" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" >
-					<p>Confirm Password</p>
+					<p id="account_register_passwordConfirm">Confirm Password</p>
 					<input class="accountMenuInputText" id="hf_registerPasswordConfirm" type="password" required pattern="(?=^.{5,12}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" >
-					<p>Gender</p>
+					<p id="account_register_gender">Gender</p>
 					<select id="hf_registerGender" required>
 						<option id="hf_registerGender_Female">Female</option>
 						<option id="hf_registerGender_Male">Male</option>
@@ -123,12 +219,12 @@
 					<input class="accountMenuInputButton" id="hf_registerSubmit" type="submit" value="Register">
 				</form>
 				<form name="accountDelete" class="accountMenu accountDelete" method="post">
-					<h2>Are you sure you want to delete your account?</h2>
+					<h2 id="account_delete_header">Are you sure you want to delete your account?</h2>
 					<input class="accountMenuInputButton" id="hf_deleteYes" type="submit" value="Yes"><br/>
 					<input class="accountMenuInputButton" id="hf_deleteNo" type="submit" value="No">
 				</form>
 				<form name="accountForgot" class="accountMenu accountForgot" method="post">
-					<h2>Enter the email connected to your account below, and we'll email you your password</h2>
+					<h2 id="account_forgot_header">Enter the email connected to your account below, and we'll email you your password</h2>
 					<input class="accountMenuInputText" id="hf_forgotEmail" type="text"><br/>
 					<input class="accountMenuInputButton" id="hf_forgotSend" type="submit" value="Send New Password">
 				</form>
@@ -136,33 +232,42 @@
 			<script id="hf_share" type="text/template"></script>
 		</div>
 
+		<!-- Libraries Used -->
 		<script src="js/libs/jquery.js"></script>
-		<script src="js/libs/underscore.js"></script>
-		<script src="js/libs/backbone.js"></script>
-		<script src="js/libs/context-blender/context_blender.js"></script>
+		<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+		<script src="js/libs/underscore.min.js"></script>
+		<script src="js/libs/backbone-min.js"></script>
+		<script src="js/libs/context_blender.js"></script>
+		<script src="js/libs/webcamjs/webcam.min.js"></script>
+		<!-- MVC Script Files -->
 		<script src="js/models/model_color.js"></script>
 		<script src="js/models/model_face.js"></script>
 		<script src="js/models/model_hairstyle.js"></script>
+		<script src="js/models/model_language.js"></script>
 		<script src="js/models/model_topMenuItem.js"></script>
 		<script src="js/models/model_bottomMenuItem.js"></script>
 		<script src="js/collections/collection_colors.js"></script>
 		<script src="js/collections/collection_faces.js"></script>
 		<script src="js/collections/collection_hairstyles.js"></script>
+		<script src="js/collections/collection_languages.js"></script>
 		<script src="js/collections/collection_topMenu.js"></script>
 		<script src="js/collections/collection_bottomMenu.js"></script>
 		<script src="js/views/view_model_color.js"></script>
 		<script src="js/views/view_model_face.js"></script>
 		<script src="js/views/view_model_hairstyle.js"></script>
+		<script src="js/views/view_model_language.js"></script>
 		<script src="js/views/view_model_topMenuItem.js"></script>
 		<script src="js/views/view_model_bottomMenuItem.js"></script>
 		<script src="js/views/view_collection_colors.js"></script>
 		<script src="js/views/view_collection_faces.js"></script>
 		<script src="js/views/view_collection_hairstyles.js"></script>
+		<script src="js/views/view_collection_languages.js"></script>
 		<script src="js/views/view_collection_topMenu.js"></script>
 		<script src="js/views/view_collection_bottomMenu.js"></script>
+		<!-- Additional Custom Scripts -->
 		<script src="js/apiCalls.js"></script>
-		<script src="js/webcam.js"></script>
-		<script src="js/languages.js"></script>
+		<script src="js/languages.js"></script>	
+		<script src="js/myWebcam.js"></script>
 		<script src="js/hairFinderApp.js"></script>
 	</body>
 </html>

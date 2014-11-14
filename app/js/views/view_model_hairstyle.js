@@ -13,10 +13,8 @@ app.hf_view_model_hairstyle = Backbone.View.extend({
 		'click' : 'loadHairstyle'
 	},
 	loadHairstyle : function (e) {
-		console.log(e);
 		e.stopPropagation();
 		if (curHaircut != this.model) {
-			console.log($(this));
 			$('.hairstyleElementFilter.active').each (function(){ $(this).removeClass('active') });
 			curHaircut = this.model;
 			curHaircutElement = $(e.currentTarget.children[0]).attr('id');
@@ -31,12 +29,14 @@ app.hf_view_model_hairstyle = Backbone.View.extend({
 			curColorHighlight = '';
 			colorize = false;
 
-			$('.colorHair.active').each( function() { $(this).removeClass('active') } );
-			$('.colorHighlight.active').each( function() { $(this).removeClass('active') } );
+			$('.Hair.active').each( function() { $(this).removeClass('active') } );
+			$('.Highlight.active').each( function() { $(this).removeClass('active') } );
 			$('p#imageID').html(String(this.model.attributes.hf_id));
 			$('#imageLoad').show();			
 		} else {
-			// load page logic
+			
 		}
 	}
 });
+
+var myObj

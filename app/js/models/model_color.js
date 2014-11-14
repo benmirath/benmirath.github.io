@@ -7,6 +7,7 @@ app.hf_model_color = Backbone.Model.extend({
 		hf_color_value : "default",
 		hf_color_categoryName : "",
 		hf_color_categoryIndex : "",
-		hf_display_type : ""
+		hf_display_type : "",
+		hf_blend_type : "overlay"
 	}
 });

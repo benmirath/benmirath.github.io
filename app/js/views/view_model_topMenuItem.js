@@ -11,8 +11,8 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 		var subMenu = this.$el.children('.topMenuSub');
 		for (subItem in this.model.attributes.hf_buttonSubMenu) {
 			// console.log("loop val: "+subItem);
-			// var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + this.model.attributes.hf_buttonSubMenu[subItem] + '</li>');
-			var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + language_topMenu_Model(this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('')) + '</li>');
+			var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + this.model.attributes.hf_buttonSubMenu[subItem] + '</li>');
+			// var newSub = $('<li class="hf_topMenuSubItem" id="' + this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('') + '" data-subValue='+subItem+'>' + language_topMenu_Model(this.model.attributes.hf_buttonName + '_' + String(this.model.attributes.hf_buttonSubMenu[subItem]).split(' ').join('')) + '</li>');
 			if (subItem == 0) newSub.addClass('active');
 			subMenu.append(newSub);
 		}
@@ -23,6 +23,7 @@ app.hf_view_model_topMenuItem = Backbone.View.extend({
 	},
 	toggleMenu : function (e) {
 		var targetObj = e.target;
+		console.log(e);
 		// TOP MENU
 		if (targetObj.classList.contains('hf_topMenuItem')) {
 			// disable button and sub

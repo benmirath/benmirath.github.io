@@ -12,6 +12,7 @@ app.hf_model_hairstyle = Backbone.Model.extend({
 		hf_imageOriginal : "imagePath",
 		hf_imageGrayscale : "imagePath",
 		hf_imageHighlight : "imagePath",
-		hf_colors : [1]
+		hf_colors : [1],
+		hf_url : ''
 	}
 });

@@ -13,7 +13,6 @@ app.hf_view_model_color = Backbone.View.extend({
 		if (this.displayType == app.hf_color_display_type.HAIR) this.__proto__.template = _.template( $('#hf_colorHairElement').html() );
 		else if (this.displayType == app.hf_color_display_type.HIGHLIGHT) this.__proto__.template = _.template( $('#hf_colorHighlightElement').html() );
 		else console.log('ERROR: hf_view_model_color - '+this.displayType);
-
 		var colorTemplate = this.template(this.model.toJSON());
 		this.$el.html(colorTemplate);
 		return this;
@@ -26,12 +25,10 @@ app.hf_view_model_color = Backbone.View.extend({
 		'click' : 'loadColor'
 	},
 	loadColor : function (e) {
-		console.log(e);
+		if ($(e.target).data('color_val') == '' || $(e.target).data('color_val') == undefined) return;
 		colorObjTest = e;
 		var tar = e;
 		//hair color is active, return to default;
-		
-
 		if ($(tar.target).hasClass('active')) {
 			$(tar.target).removeClass('active');
 			if (this.displayType === "Hair") {
@@ -56,11 +53,11 @@ app.hf_view_model_color = Backbone.View.extend({
 			} else if (this.displayType === "Highlight") {
 				$('.Highlight.active').each( function() { $(this).removeClass('active') } );
 				curColorHighlight = $(tar.target).data('color_val');
+
 				imageHairHighlight.src = curHaircut.attributes.hf_imageHighlight;
 			}
 			$(tar.target).addClass('active');			
 		}
-		console.log($(tar.target).data('color_val'));
 		colorizeHair();
 	}
 });
